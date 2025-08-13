@@ -3,944 +3,2399 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Values-Based Decision Making Training</title>
+    <title>Values-Based Decision Making Under Pressure</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: white;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: radial-gradient(ellipse at top, #0f0515 0%, #1a0a1a 30%, #2d1b2e 70%, #0f0515 100%);
+            color: #ffffff;
+            line-height: 1.6;
             min-height: 100vh;
+            overflow-x: hidden;
         }
-        
-        .header {
-            background: rgba(0,0,0,0.3);
-            padding: 20px;
-            text-align: center;
-            border-bottom: 2px solid rgba(255,255,255,0.1);
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 15% 25%, rgba(75, 0, 130, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 85% 75%, rgba(139, 69, 19, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
         }
-        
-        .header h1 {
-            font-size: 28px;
-            margin-bottom: 10px;
-            color: #fff;
-        }
-        
-        .header p {
-            color: rgba(255,255,255,0.8);
-            font-size: 16px;
-        }
-        
-        .tabs {
+
+        .app-container {
+            min-height: 100vh;
             display: flex;
-            background: rgba(0,0,0,0.2);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            flex-direction: column;
         }
-        
-        .tab {
-            padding: 15px 25px;
+
+        .header-section {
+            background: rgba(139, 69, 19, 0.08);
+            backdrop-filter: blur(25px);
+            border-bottom: 1px solid rgba(139, 69, 19, 0.15);
+            padding: 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .main-title {
+            font-size: clamp(28px, 5vw, 42px);
+            font-weight: 600;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #ffffff, #e8d5b7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .main-subtitle {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.75);
+            max-width: 700px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+
+        .tab-navigation {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(15px);
+            padding: 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: center;
+            overflow-x: auto;
+        }
+
+        .tab-item {
+            padding: 20px 30px;
             cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
             border-bottom: 3px solid transparent;
             transition: all 0.3s ease;
-            opacity: 0.7;
+            white-space: nowrap;
+            position: relative;
+            background: rgba(255, 255, 255, 0.02);
+            color: rgba(255, 255, 255, 0.6);
         }
-        
-        .tab.active {
-            opacity: 1;
-            border-bottom-color: #4CAF50;
-            background: rgba(255,255,255,0.1);
+
+        .tab-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.8);
         }
-        
-        .tab.disabled {
+
+        .tab-item.active {
+            color: #ffffff;
+            border-bottom-color: #e8d5b7;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .tab-item.disabled {
             opacity: 0.3;
             cursor: not-allowed;
             pointer-events: none;
         }
-        
-        .content {
-            padding: 30px;
-            max-width: 1200px;
-            margin: 0 auto;
+
+        .tab-item.intro.active {
+            border-bottom-color: #ffc107;
+            background: rgba(255, 193, 7, 0.1);
         }
-        
-        .scenario-card {
-            background: rgba(255,255,255,0.1);
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 20px;
-            backdrop-filter: blur(10px);
+
+        .tab-item.scenario1.active {
+            border-bottom-color: #e74c3c;
+            background: rgba(231, 76, 60, 0.1);
         }
-        
-        .scenario-title {
-            font-size: 24px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+
+        .tab-item.scenario2.active {
+            border-bottom-color: #3498db;
+            background: rgba(52, 152, 219, 0.1);
         }
-        
-        .scenario-description {
-            margin-bottom: 20px;
-            line-height: 1.6;
-            color: rgba(255,255,255,0.9);
+
+        .tab-item.scenario3.active {
+            border-bottom-color: #9b59b6;
+            background: rgba(155, 89, 182, 0.1);
         }
-        
-        .btn {
-            background: linear-gradient(135deg, #4CAF50, #45a049);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: transform 0.3s ease;
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-        
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .hidden { display: none; }
-        
-        .phase-container {
-            background: rgba(255,255,255,0.1);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-        }
-        
-        .phase-header {
+
+        .status-bar {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(15px);
+            padding: 15px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .status-indicators {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .status-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .status-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+
+        .pressure-meter {
+            width: 180px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .pressure-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #27ae60, #f39c12, #e74c3c);
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 20px;
+        }
+
+        .main-content {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            min-height: calc(100vh - 200px);
+        }
+
+        .sidebar {
+            background: rgba(139, 69, 19, 0.06);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(139, 69, 19, 0.1);
+            padding: 25px;
+            overflow-y: auto;
+        }
+
+        .sidebar-section {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+        }
+
+        .sidebar-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(139, 69, 19, 0.6), rgba(160, 82, 45, 0.4));
+            border-radius: 0 3px 3px 0;
+        }
+
+        .sidebar-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #e8d5b7;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-content {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.5;
+        }
+
+        .coaching-prompt {
+            background: rgba(46, 204, 113, 0.1);
+            border: 1px solid rgba(46, 204, 113, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px 0;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.9);
+            border-left: 4px solid #2ecc71;
+            animation: glow-coaching 3s infinite;
+        }
+
+        @keyframes glow-coaching {
+            0%, 100% { box-shadow: 0 0 10px rgba(46, 204, 113, 0.2); }
+            50% { box-shadow: 0 0 20px rgba(46, 204, 113, 0.4); }
+        }
+
+        .main-panel {
+            padding: 30px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeInUp 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .intro-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .intro-hero {
+            background: rgba(255, 193, 7, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 193, 7, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .intro-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #ffc107, #f39c12, #ffc107);
+        }
+
+        .step-indicator {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .intro-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #ffffff;
             margin-bottom: 20px;
         }
-        
-        .timer {
-            background: rgba(255,87,87,0.8);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: bold;
-            min-width: 60px;
-            text-align: center;
+
+        .intro-description {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.7;
+            margin-bottom: 30px;
         }
-        
-        .choice-group {
+
+        .completion-indicator {
+            background: rgba(46, 204, 113, 0.15);
+            border: 1px solid rgba(46, 204, 113, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: center;
+            display: none;
+        }
+
+        .completion-indicator.show {
+            display: block;
+            animation: completion-appear 0.5s ease-out;
+        }
+
+        @keyframes completion-appear {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .key-concepts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .concept-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+        }
+
+        .concept-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #8b4513, #a0522d);
+        }
+
+        .concept-icon {
+            font-size: 32px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .concept-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .concept-desc {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.5;
+        }
+
+        .scenario-content {
+            position: relative;
+        }
+
+        .scenario1-content {
+            border-left: 4px solid #e74c3c;
+        }
+
+        .scenario1-content .decision-phase {
+            border: 1px solid rgba(231, 76, 60, 0.15);
+        }
+
+        .scenario1-content .phase-header {
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.15), rgba(192, 57, 43, 0.1));
+        }
+
+        .scenario1-content .scenario-intro-card::before {
+            background: linear-gradient(90deg, #e74c3c, #c0392b, #e74c3c);
+        }
+
+        .scenario2-content {
+            border-left: 4px solid #3498db;
+        }
+
+        .scenario2-content .decision-phase {
+            border: 1px solid rgba(52, 152, 219, 0.15);
+        }
+
+        .scenario2-content .phase-header {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.15), rgba(41, 128, 185, 0.1));
+        }
+
+        .scenario2-content .scenario-intro-card::before {
+            background: linear-gradient(90deg, #3498db, #2980b9, #3498db);
+        }
+
+        .scenario3-content {
+            border-left: 4px solid #9b59b6;
+        }
+
+        .scenario3-content .decision-phase {
+            border: 1px solid rgba(155, 89, 182, 0.15);
+        }
+
+        .scenario3-content .phase-header {
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.15), rgba(142, 68, 173, 0.1));
+        }
+
+        .scenario3-content .scenario-intro-card::before {
+            background: linear-gradient(90deg, #9b59b6, #8e44ad, #9b59b6);
+        }
+
+        .scenario-intro-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .scenario-intro-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+        }
+
+        .multiple-choice-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .choice-option {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .choice-option::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, #2ecc71, #27ae60);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+            border-radius: 0 3px 3px 0;
+        }
+
+        .choice-option:hover::before,
+        .choice-option.selected::before {
+            transform: scaleY(1);
+        }
+
+        .choice-option:hover,
+        .choice-option.selected {
+            background: rgba(46, 204, 113, 0.08);
+            border-color: rgba(46, 204, 113, 0.3);
+            transform: translateX(4px);
+        }
+
+        .choice-text {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.5;
+        }
+
+        .choice-label {
+            font-weight: 600;
+            color: #e8d5b7;
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+
+        .scenario-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .scenario-icon {
+            font-size: 28px;
+            margin-right: 15px;
+        }
+
+        .scenario-description {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .scenario-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
             margin-bottom: 25px;
         }
-        
-        .choice-label {
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: #FFD700;
+
+        .decision-phase {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(231, 76, 60, 0.15);
+            border-radius: 20px;
+            margin-bottom: 25px;
+            overflow: hidden;
+            position: relative;
+            display: none;
         }
-        
-        .choice-option {
-            background: rgba(255,255,255,0.1);
-            border: 2px solid transparent;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
+
+        .decision-phase.active {
+            display: block;
+            animation: phase-enter 0.8s cubic-bezier(0.23, 1, 0.32, 1);
         }
-        
-        .choice-option:hover {
-            border-color: rgba(255,255,255,0.3);
+
+        @keyframes phase-enter {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
-        
-        .choice-option.selected {
-            border-color: #4CAF50;
-            background: rgba(76,175,80,0.2);
+
+        .phase-header {
+            padding: 25px 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.15), rgba(192, 57, 43, 0.1));
         }
-        
-        .choice-title {
-            font-weight: bold;
-            margin-bottom: 5px;
+
+        .phase-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
         }
-        
-        .choice-desc {
-            font-size: 14px;
-            color: rgba(255,255,255,0.8);
+
+        .phase-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #ffffff;
         }
-        
-        .values-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-        
-        .value-card {
-            background: rgba(255,255,255,0.1);
-            border: 2px solid transparent;
-            border-radius: 10px;
-            padding: 15px;
+
+        .phase-timer {
+            background: rgba(231, 76, 60, 0.2);
+            color: #ff6b6b;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid rgba(231, 76, 60, 0.3);
+            min-width: 70px;
             text-align: center;
-            cursor: pointer;
+        }
+
+        .phase-description {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .phase-content {
+            padding: 25px 30px;
+        }
+
+        .coaching-prompts {
+            background: rgba(46, 204, 113, 0.08);
+            border: 1px solid rgba(46, 204, 113, 0.15);
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .coaching-prompts::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 18px;
+            background: rgba(46, 204, 113, 0.2);
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-size: 14px;
+        }
+
+        .prompt-title {
+            font-weight: 600;
+            color: #2ecc71;
+            margin-bottom: 12px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .prompt-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .prompt-list li {
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 6px;
+            font-size: 13px;
+            padding-left: 16px;
+            position: relative;
+        }
+
+        .prompt-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            color: #2ecc71;
+            font-weight: bold;
+        }
+
+        .decision-input {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 18px;
+        }
+
+        .input-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #e8d5b7;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .decision-textarea {
+            width: 100%;
+            min-height: 70px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 12px;
+            color: #ffffff;
+            font-size: 13px;
+            font-family: inherit;
+            resize: vertical;
             transition: all 0.3s ease;
         }
-        
-        .value-card:hover {
-            border-color: rgba(255,255,255,0.3);
+
+        .decision-textarea:focus {
+            outline: none;
+            border-color: rgba(139, 69, 19, 0.5);
+            box-shadow: 0 0 20px rgba(139, 69, 19, 0.2);
         }
-        
-        .value-card.selected {
-            border-color: #4CAF50;
-            background: rgba(76,175,80,0.2);
+
+        .decision-textarea::placeholder {
+            color: rgba(255, 255, 255, 0.4);
         }
-        
-        .controls {
+
+        .values-checklist {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .values-item {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            text-align: center;
+        }
+
+        .values-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #2ecc71, #27ae60);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .values-item:hover::before,
+        .values-item.selected::before {
+            transform: scaleX(1);
+        }
+
+        .values-item:hover,
+        .values-item.selected {
+            background: rgba(46, 204, 113, 0.1);
+            border-color: rgba(46, 204, 113, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .values-name {
+            font-weight: 500;
+            color: #ffffff;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .values-desc {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .timer-display {
+            position: fixed;
+            top: 50%;
+            right: 30px;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(231, 76, 60, 0.3);
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            box-shadow: 0 0 30px rgba(231, 76, 60, 0.4);
+        }
+
+        .timer-display.active {
+            display: flex;
+            animation: timer-entrance 0.5s ease-out;
+        }
+
+        @keyframes timer-entrance {
+            from {
+                opacity: 0;
+                transform: translateY(-50%) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(-50%) scale(1);
+            }
+        }
+
+        .timer-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1;
+        }
+
+        .timer-label {
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 2px;
+        }
+
+        .timer-ring {
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 50%;
+            background: conic-gradient(#e74c3c 0%, #e74c3c var(--progress, 0%), rgba(255, 255, 255, 0.1) var(--progress, 0%));
+        }
+
+        .phase-controls {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
-        
-        .coaching {
-            background: rgba(76,175,80,0.1);
-            border: 1px solid rgba(76,175,80,0.3);
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
             border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 13px;
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            overflow: hidden;
+            font-family: inherit;
         }
-        
-        .coaching-title {
-            font-weight: bold;
-            color: #4CAF50;
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            transition: width 0.4s ease, height 0.4s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        .btn:hover::before {
+            width: 180px;
+            height: 180px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            box-shadow: 0 8px 25px rgba(46, 204, 113, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(46, 204, 113, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results-panel {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 35px;
+            margin-top: 25px;
+            display: none;
+        }
+
+        .results-panel.show {
+            display: block;
+            animation: results-enter 1s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        @keyframes results-enter {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .results-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #ffffff;
             margin-bottom: 10px;
         }
-        
-        .status-bar {
-            background: rgba(0,0,0,0.3);
-            padding: 15px;
-            display: flex;
-            justify-content: space-around;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+
+        .results-subtitle {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
         }
-        
-        .status-item {
-            text-align: center;
-        }
-        
-        .status-value {
-            font-size: 24px;
-            font-weight: bold;
-        }
-        
-        .status-label {
-            font-size: 12px;
-            opacity: 0.8;
-        }
-        
-        .results {
-            background: rgba(255,255,255,0.1);
-            border-radius: 15px;
-            padding: 30px;
-            text-align: center;
-        }
-        
-        .score-grid {
+
+        .scores-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin: 30px 0;
+            gap: 15px;
+            margin-bottom: 30px;
         }
-        
+
         .score-card {
-            background: rgba(255,255,255,0.1);
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
             padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .score-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .score-label {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         
-        .score-number {
-            font-size: 32px;
-            font-weight: bold;
+        .status-value .scale,
+        .score-value .scale {
+            font-size: 0.5em;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 400;
+            vertical-align: middle;
+            margin-left: 4px;
+        }
+
+        .score-excellent {
+            color: #2ecc71;
+            border-left: 3px solid #2ecc71;
+        }
+
+        .score-good {
+            color: #f39c12;
+            border-left: 3px solid #f39c12;
+        }
+
+        .score-needs-improvement {
+            color: #e74c3c;
+            border-left: 3px solid #e74c3c;
+        }
+
+        .feedback-section {
+            background: rgba(46, 204, 113, 0.08);
+            border: 1px solid rgba(46, 204, 113, 0.15);
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .feedback-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2ecc71;
+            margin-bottom: 12px;
+        }
+
+        .feedback-content {
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .feedback-content ul {
+            list-style-position: inside;
+            padding-left: 0;
+            margin-top: 15px;
+        }
+
+        .feedback-content li {
+            margin-bottom: 8px;
+        }
+
+        .next-step-section {
+            margin-top: 35px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            border-top: 2px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .next-step-section h3 {
+            font-size: 18px;
+            color: #e8d5b7;
             margin-bottom: 10px;
         }
-        
-        .excellent { color: #4CAF50; }
-        .good { color: #FFC107; }
-        .needs-improvement { color: #FF5722; }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+
+        .next-step-section p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
-        
-        .fade-in {
-            animation: fadeIn 0.5s ease-out;
+
+        .next-step-section .btn {
+            margin: 5px;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                order: 2;
+                border-right: none;
+                border-top: 1px solid rgba(139, 69, 19, 0.1);
+            }
+            .timer-display {
+                width: 80px;
+                height: 80px;
+                top: 20px;
+                right: 20px;
+            }
+            .timer-value {
+                font-size: 22px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .scores-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Values-Based Decision Making Under Pressure</h1>
-        <p>Navigate high-stakes leadership challenges while maintaining ethical alignment</p>
-    </div>
-
-    <div class="status-bar" id="statusBar">
-        <div class="status-item">
-            <div class="status-value" id="valuesScore">--</div>
-            <div class="status-label">Values</div>
-        </div>
-        <div class="status-item">
-            <div class="status-value" id="qualityScore">--</div>
-            <div class="status-label">Quality</div>
-        </div>
-        <div class="status-item">
-            <div class="status-value" id="impactScore">--</div>
-            <div class="status-label">Impact</div>
-        </div>
-        <div class="status-item">
-            <div class="status-value" id="systemsScore">--</div>
-            <div class="status-label">Systems</div>
-        </div>
-    </div>
-
-    <div class="tabs">
-        <div class="tab active" onclick="showTab('intro')">📖 Introduction</div>
-        <div class="tab disabled" onclick="showTab('scenario1')" id="tab1">🚨 Crisis Response</div>
-        <div class="tab disabled" onclick="showTab('scenario2')" id="tab2">📢 Media Crisis</div>
-        <div class="tab disabled" onclick="showTab('scenario3')" id="tab3">⚖️ Ethical Conflict</div>
-    </div>
-
-    <div class="content">
-        <!-- Introduction Tab -->
-        <div id="intro" class="tab-content">
-            <div class="scenario-card">
-                <h2>Understanding Values-Based Leadership Under Pressure</h2>
-                <p style="margin: 20px 0;">This tool simulates realistic high-pressure leadership scenarios where you must make critical decisions while maintaining your core values. Each scenario includes timed decision phases with live coaching prompts.</p>
-                
-                <div style="background: rgba(255,87,87,0.1); border: 1px solid rgba(255,87,87,0.3); border-radius: 10px; padding: 20px; margin: 20px 0;">
-                    <strong>⚠️ Why This Training Matters:</strong><br>
-                    Research shows 73% of leaders make decisions under pressure that they later regret because they compromised their values or failed to consider long-term impacts.
+    <div class="app-container">
+        <header class="header-section">
+            <h1 class="main-title">Values-Based Decision Making Under Pressure</h1>
+            <p class="main-subtitle">Navigate high-stakes leadership challenges while maintaining ethical alignment and systems awareness</p>
+        </header>
+        <nav class="tab-navigation">
+            <div class="tab-item intro active" onclick="showTab('intro')" id="introTab">Step 1: Read First</div>
+            <div class="tab-item scenario1 disabled" onclick="showTab('scenario1')" id="scenario1Tab">Crisis Resource Allocation</div>
+            <div class="tab-item scenario2 disabled" onclick="showTab('scenario2')" id="scenario2Tab">Media Crisis Communication</div>
+            <div class="tab-item scenario3 disabled" onclick="showTab('scenario3')" id="scenario3Tab">Ethical Policy Conflict</div>
+        </nav>
+        <div class="status-bar">
+            <div class="status-indicators">
+                <div class="status-item">
+                    <div id="valuesScore" class="status-value"><span>--</span><span class="scale"> / 100</span></div>
+                    <div>Values Alignment</div>
                 </div>
-
-                <div style="background: rgba(76,175,80,0.1); border: 1px solid rgba(76,175,80,0.3); border-radius: 10px; padding: 20px; margin: 20px 0;">
-                    <strong>✅ Ready to Begin?</strong><br>
-                    Each scenario takes 4-6 minutes with multiple timed phases and real coaching support.
-                    <br><br>
-                    <button class="btn" onclick="enableScenarios()">🚀 I'm Ready - Enable Scenarios</button>
+                <div class="status-item">
+                    <div id="decisionQuality" class="status-value"><span>--</span><span class="scale"> / 100</span></div>
+                    <div>Decision Quality</div>
                 </div>
-
-                <div id="completion" class="hidden" style="background: rgba(76,175,80,0.2); border: 1px solid rgba(76,175,80,0.5); border-radius: 10px; padding: 20px; margin: 20px 0;">
-                    <strong>🎯 Scenarios Now Available!</strong><br>
-                    Click on the scenario tabs above to begin your training.
+                <div class="status-item">
+                    <div id="stakeholderImpact" class="status-value"><span>--</span><span class="scale"> / 100</span></div>
+                    <div>Stakeholder Impact</div>
+                </div>
+                <div class="status-item">
+                    <div id="systemsAwareness" class="status-value"><span>--</span><span class="scale"> / 100</span></div>
+                    <div>Systems Awareness</div>
+                </div>
+            </div>
+            <div>
+                <div style="font-size: 11px; color: rgba(255,255,255,0.6); margin-bottom: 4px;">PRESSURE LEVEL</div>
+                <div class="pressure-meter">
+                    <div id="pressureFill" class="pressure-fill"></div>
                 </div>
             </div>
         </div>
-
-        <!-- Scenario 1: Crisis Response -->
-        <div id="scenario1" class="tab-content hidden">
-            <div id="s1-intro" class="scenario-card">
-                <div class="scenario-title">🚨 Crisis Resource Allocation</div>
-                <div class="scenario-description">
-                    You are overseeing a multi-agency field response. A key shipment of medical supplies failed to arrive. Some staff blame protocol failures, others cite unpredictable circumstances. You need to respond quickly while maintaining team trust and operational effectiveness.
-                </div>
-                <div style="margin: 15px 0; font-size: 14px; opacity: 0.8;">
-                    ⏱️ 4 phases • ~4 minutes • High pressure
-                </div>
-                <button class="btn" onclick="startScenario(1)">Begin Decision Sequence →</button>
-            </div>
-
-            <div id="s1-phases" class="hidden">
-                <div id="s1-coaching" class="coaching">
-                    <div class="coaching-title">💡 Live Coaching</div>
-                    <div id="s1-prompt">Coaching guidance will appear here...</div>
-                </div>
-
-                <div id="s1-phase" class="phase-container">
-                    <div class="phase-header">
-                        <h3 id="s1-phase-title">Phase 1: Ground & Center</h3>
-                        <div class="timer" id="s1-timer">15s</div>
-                    </div>
-
-                    <div id="s1-content">
-                        <!-- Phase content will be dynamically loaded -->
-                    </div>
-
-                    <div class="controls">
-                        <button class="btn" onclick="previousPhase(1)" id="s1-prev" disabled>← Previous</button>
-                        <div>
-                            <button class="btn" onclick="pauseTimer()" id="s1-pause">⏸️ Pause</button>
-                            <button class="btn" onclick="nextPhase(1)" id="s1-next" disabled>Continue →</button>
+        <div class="main-content">
+            <aside class="sidebar">
+                <div class="sidebar-section" id="activeCoaching" style="display: none;">
+                    <h3 class="sidebar-title">Live Coaching</h3>
+                    <div id="coachingContent" class="sidebar-content">
+                        <div class="coaching-prompt">
+                            <div class="prompt-title">Active Guidance</div>
+                            <div id="activePrompt">Coaching prompts will appear here during scenarios...</div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div id="s1-results" class="results hidden">
-                <h2>Scenario 1 Complete!</h2>
-                <div class="score-grid">
-                    <div class="score-card">
-                        <div class="score-number" id="s1-values">--</div>
-                        <div>Values Alignment</div>
-                    </div>
-                    <div class="score-card">
-                        <div class="score-number" id="s1-quality">--</div>
-                        <div>Decision Quality</div>
-                    </div>
-                    <div class="score-card">
-                        <div class="score-number" id="s1-impact">--</div>
-                        <div>Stakeholder Impact</div>
-                    </div>
-                    <div class="score-card">
-                        <div class="score-number" id="s1-systems">--</div>
-                        <div>Systems Awareness</div>
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">Decision Framework</h3>
+                    <div class="sidebar-content">
+                        <p style="margin-bottom: 10px; font-size: 13px;">Each scenario follows a structured approach:</p>
+                        <ul style="list-style: disc; padding-left: 16px; font-size: 12px;">
+                            <li><strong>Ground & Center:</strong> Identify core challenges</li>
+                            <li><strong>Clarify Stakes:</strong> Define what matters most</li>
+                            <li><strong>Generate Options:</strong> Create values-aligned solutions</li>
+                            <li><strong>Decide & Communicate:</strong> Make and explain your choice</li>
+                        </ul>
                     </div>
                 </div>
-                <div id="s1-feedback" style="background: rgba(76,175,80,0.1); border-radius: 10px; padding: 20px; margin: 20px 0;"></div>
-                <button class="btn" onclick="showTab('scenario2')" style="margin-right: 10px;">Next Scenario →</button>
-                <button class="btn" onclick="restartScenario(1)">🔄 Try Again</button>
-            </div>
-        </div>
-
-        <!-- Scenario 2: Media Crisis -->
-        <div id="scenario2" class="tab-content hidden">
-            <div id="s2-intro" class="scenario-card">
-                <div class="scenario-title">📢 Media Crisis Communication</div>
-                <div class="scenario-description">
-                    A serious incident has occurred. Reports are conflicting, media attention is intensifying, and stakeholders demand immediate statements. Your communication decisions will significantly impact public trust and response effectiveness.
-                </div>
-                <div style="margin: 15px 0; font-size: 14px; opacity: 0.8;">
-                    ⏱️ 4 phases • ~5 minutes • Extreme pressure
-                </div>
-                <button class="btn" onclick="startScenario(2)">Begin Decision Sequence →</button>
-            </div>
-
-            <div id="s2-phases" class="hidden">
-                <div id="s2-coaching" class="coaching">
-                    <div class="coaching-title">💡 Live Coaching</div>
-                    <div id="s2-prompt">Coaching guidance will appear here...</div>
-                </div>
-
-                <div id="s2-phase" class="phase-container">
-                    <div class="phase-header">
-                        <h3 id="s2-phase-title">Phase 1</h3>
-                        <div class="timer" id="s2-timer">20s</div>
-                    </div>
-                    <div id="s2-content"></div>
-                    <div class="controls">
-                        <button class="btn" onclick="previousPhase(2)" id="s2-prev" disabled>← Previous</button>
-                        <div>
-                            <button class="btn" onclick="pauseTimer()" id="s2-pause">⏸️ Pause</button>
-                            <button class="btn" onclick="nextPhase(2)" id="s2-next" disabled>Continue →</button>
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">Current Progress</h3>
+                    <div class="sidebar-content">
+                        <div style="font-size: 12px; color: rgba(255,255,255,0.7);">
+                            <div id="progressIndicator">Ready to begin scenarios</div>
+                            <div style="margin-top: 10px;">
+                                <div style="background: rgba(255,255,255,0.1); height: 6px; border-radius: 3px;">
+                                    <div id="progressBar" style="background: linear-gradient(90deg, #2ecc71, #27ae60); height: 100%; width: 0%; border-radius: 3px; transition: width 0.5s ease;"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div id="s2-results" class="results hidden">
-                <h2>Scenario 2 Complete!</h2>
-                <div class="score-grid">
-                    <div class="score-card">
-                        <div class="score-number" id="s2-values">--</div>
-                        <div>Values Alignment</div>
-                    </div>
-                    <div class="score-card">
-                        <div class="score-number" id="s2-quality">--</div>
-                        <div>Decision Quality</div>
-                    </div>
-                    <div class="score-card">
-                        <div class="score-number" id="s2-impact">--</div>
-                        <div>Stakeholder Impact</div>
-                    </div>
-                    <div class="score-card">
-                        <div class="score-number" id="s2-systems">--</div>
-                        <div>Systems Awareness</div>
-                    </div>
-                </div>
-                <div id="s2-feedback" style="background: rgba(76,175,80,0.1); border-radius: 10px; padding: 20px; margin: 20px 0;"></div>
-                <button class="btn" onclick="showTab('scenario3')" style="margin-right: 10px;">Next Scenario →</button>
-                <button class="btn" onclick="restartScenario(2)">🔄 Try Again</button>
-            </div>
-        </div>
-
-        <!-- Scenario 3: Ethical Conflict -->
-        <div id="scenario3" class="tab-content hidden">
-            <div id="s3-intro" class="scenario-card">
-                <div class="scenario-title">⚖️ Ethical Policy Conflict</div>
-                <div class="scenario-description">
-                    Your organization must implement a new policy that conflicts with community values. Leadership expects compliance, but early feedback reveals ethical concerns and potential harm to vulnerable populations. You must balance organizational loyalty with community welfare.
-                </div>
-                <div style="margin: 15px 0; font-size: 14px; opacity: 0.8;">
-                    ⏱️ 4 phases • ~6 minutes • Maximum pressure
-                </div>
-                <button class="btn" onclick="startScenario(3)">Begin Decision Sequence →</button>
-            </div>
-
-            <div id="s3-phases" class="hidden">
-                <div id="s3-coaching" class="coaching">
-                    <div class="coaching-title">💡 Live Coaching</div>
-                    <div id="s3-prompt">Coaching guidance will appear here...</div>
-                </div>
-
-                <div id="s3-phase" class="phase-container">
-                    <div class="phase-header">
-                        <h3 id="s3-phase-title">Phase 1</h3>
-                        <div class="timer" id="s3-timer">30s</div>
-                    </div>
-                    <div id="s3-content"></div>
-                    <div class="controls">
-                        <button class="btn" onclick="previousPhase(3)" id="s3-prev" disabled>← Previous</button>
-                        <div>
-                            <button class="btn" onclick="pauseTimer()" id="s3-pause">⏸️ Pause</button>
-                            <button class="btn" onclick="nextPhase(3)" id="s3-next" disabled>Continue →</button>
+            </aside>
+            <main class="main-panel">
+                <div id="intro" class="tab-content active">
+                    <div class="intro-content">
+                        <div class="intro-hero">
+                            <div class="step-indicator">Step 1: Read This First</div>
+                            <h2 class="intro-title">Understanding Values-Based Leadership Under Pressure</h2>
+                            <p class="intro-description">
+                                This tool simulates realistic high-pressure leadership scenarios where you must make critical decisions while maintaining your core values and considering systems-wide impact. Each scenario includes timed decision phases with live coaching prompts and real-time pressure indicators.
+                            </p>
+                            <div style="background: rgba(231, 76, 60, 0.1); border: 1px solid rgba(231, 76, 60, 0.2); border-radius: 12px; padding: 20px; margin: 25px 0;">
+                                <h4 style="color: #ff6b6b; margin-bottom: 12px; font-size: 14px;">! Important: Why This Training Matters</h4>
+                                <p style="color: rgba(255, 255, 255, 0.85); font-size: 13px; line-height: 1.5;">
+                                    Research shows that 73% of leaders report making decisions under pressure that they later regretted because they compromised their values or failed to consider long-term impacts. This tool builds your capacity to maintain ethical leadership even when stakes are high and time is short.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="key-concepts">
+                            <div class="concept-card">
+                                <span class="concept-icon"></span>
+                                <div class="concept-title">Timed Decision Phases</div>
+                                <div class="concept-desc">Progressive time constraints simulate real pressure with coaching support</div>
+                            </div>
+                            <div class="concept-card">
+                                <span class="concept-icon"></span>
+                                <div class="concept-title">Live Values Coaching</div>
+                                <div class="concept-desc">Real-time guidance helps maintain ethical alignment under stress</div>
+                            </div>
+                            <div class="concept-card">
+                                <span class="concept-icon"></span>
+                                <div class="concept-title">Multi-Dimensional Assessment</div>
+                                <div class="concept-desc">Track values, quality, stakeholder impact, and systems awareness</div>
+                            </div>
+                            <div class="concept-card">
+                                <span class="concept-icon"></span>
+                                <div class="concept-title">Progressive Complexity</div>
+                                <div class="concept-desc">Scenarios build in difficulty and stakeholder complexity</div>
+                            </div>
+                        </div>
+                        <div style="background: rgba(46, 204, 113, 0.1); border: 1px solid rgba(46, 204, 113, 0.2); border-radius: 16px; padding: 25px; margin: 30px 0; text-align: center;">
+                            <h4 style="color: #2ecc71; margin-bottom: 15px; font-size: 16px;">Ready to Begin?</h4>
+                            <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 20px; font-size: 14px;">
+                                Once you've read this introduction, you can proceed to the scenario tabs above. Each scenario takes 5-7 minutes and includes multiple timed decision phases.
+                            </p>
+                            <button class="btn btn-primary" onclick="enableScenarios()" style="font-size: 14px; padding: 12px 25px;">
+                                I'm Ready - Enable Scenarios
+                            </button>
+                        </div>
+                        <div class="completion-indicator" id="completionIndicator">
+                            <h4 style="color: #2ecc71; margin-bottom: 10px;">Scenarios Now Available!</h4>
+                            <p style="color: rgba(255, 255, 255, 0.8); font-size: 13px;">
+                                Click on the scenario tabs above to begin your values-based decision making practice.
+                            </p>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div id="s3-results" class="results hidden">
-                <h2>All Scenarios Complete!</h2>
-                <div class="score-grid">
-                    <div class="score-card">
-                        <div class="score-number" id="s3-values">--</div>
-                        <div>Values Alignment</div>
+                <div id="scenario1" class="tab-content scenario-content scenario1-content">
+                    <div class="scenario-intro-card">
+                        <h2 class="scenario-title">
+                            <span class="scenario-icon"></span> Crisis Resource Allocation
+                        </h2>
+                        <p class="scenario-description">
+                            You are overseeing a multi-agency field response effort. Your team is responsible for coordinating incoming supplies and field logistics. This morning, a key shipment of medical kits failed to arrive at its destination. Some staff are frustrated, saying protocols weren't followed. Others claim the situation was unpredictable, caused by sudden changes in priorities. You need to respond quickly—but how you choose to lead may impact trust, teamwork, and the next phase of operations.
+                        </p>
+                        <div class="scenario-stats">
+                            <span>Focus: Resource allocation and team coordination</span>
+                            <span>4 phases ~4 minutes total</span>
+                            <span>Pressure Level: High</span>
+                        </div>
+                        <button class="btn btn-primary" onclick="startScenarioPhases(1)" style="margin-top: 20px;">
+                            Begin Decision Sequence →
+                        </button>
                     </div>
-                    <div class="score-card">
-                        <div class="score-number" id="s3-quality">--</div>
-                        <div>Decision Quality</div>
-                    </div>
-                    <div class="score-card">
-                        <div class="score-number" id="s3-impact">--</div>
-                        <div>Stakeholder Impact</div>
-                    </div>
-                    <div class="score-card">
-                        <div class="score-number" id="s3-systems">--</div>
-                        <div>Systems Awareness</div>
+                    <div id="scenario1Phases" style="display: none;">
+                        <div class="decision-phase" id="s1phase1">
+                            <div class="phase-header">
+                                <div class="phase-title-row">
+                                    <h3 class="phase-title">Ground and Center</h3>
+                                    <div class="phase-timer" id="s1timer1">15s</div>
+                                </div>
+                                <p class="phase-description">Take a moment to center yourself and identify the core challenge before reactive decision-making takes over.</p>
+                            </div>
+                            <div class="phase-content">
+                                <div class="coaching-prompts">
+                                    <div class="prompt-title">Centering Questions</div>
+                                    <ul class="prompt-list">
+                                        <li>What are the real consequences for community safety?</li>
+                                        <li>What physical sensations of stress am I experiencing?</li>
+                                        <li>Which of my leadership values are most relevant here?</li>
+                                    </ul>
+                                </div>
+                                <div class="decision-input">
+                                    <label class="input-label">What is the core challenge you're facing?</label>
+                                    <div class="multiple-choice-options">
+                                        <div class="choice-option" onclick="selectChoice(this, 's1_challenge')" data-value="coordination">
+                                            <div class="choice-label">Coordination Breakdown</div>
+                                            <div class="choice-text">The primary issue is communication and coordination failures between agencies that led to the shipment problem.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's1_challenge')" data-value="accountability">
+                                            <div class="choice-label">Accountability Crisis</div>
+                                            <div class="choice-text">The core challenge is determining responsibility and ensuring this type of failure doesn't happen again.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's1_challenge')" data-value="trust">
+                                            <div class="choice-label">Team Trust & Morale</div>
+                                            <div class="choice-text">The main challenge is rebuilding team confidence and trust while maintaining operational effectiveness.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's1_challenge')" data-value="systems">
+                                            <div class="choice-label">System Resilience</div>
+                                            <div class="choice-text">This reveals deeper systemic vulnerabilities that need to be addressed to prevent cascading failures.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="values-checklist">
+                                    <div class="values-item" onclick="toggleValue(this)" data-value="integrity">
+                                        <div class="values-name">Integrity</div>
+                                        <div class="values-desc">Honest communication</div>
+                                    </div>
+                                    <div class="values-item" onclick="toggleValue(this)" data-value="safety">
+                                        <div class="values-name">Safety</div>
+                                        <div class="values-desc">Community well-being</div>
+                                    </div>
+                                    <div class="values-item" onclick="toggleValue(this)" data-value="service">
+                                        <div class="values-name">Service</div>
+                                        <div class="values-desc">Public good focus</div>
+                                    </div>
+                                    <div class="values-item" onclick="toggleValue(this)" data-value="accountability">
+                                        <div class="values-name">Accountability</div>
+                                        <div class="values-desc">Own decisions</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="decision-phase" id="s1phase2">
+                            <div class="phase-header">
+                                <div class="phase-title-row">
+                                    <h3 class="phase-title">Clarify Stakes and Values</h3>
+                                    <div class="phase-timer" id="s1timer2">60s</div>
+                                </div>
+                                <p class="phase-description">Identify what's truly at stake and ensure your decision addresses actual rather than perceived urgency.</p>
+                            </div>
+                            <div class="phase-content">
+                                <div class="coaching-prompts">
+                                    <div class="prompt-title">Values Clarification</div>
+                                    <ul class="prompt-list">
+                                        <li>What are the real consequences for community safety?</li>
+                                        <li>Which of my leadership values are most relevant?</li>
+                                        <li>How do I want to be remembered for handling this situation?</li>
+                                    </ul>
+                                </div>
+                                <div class="decision-input">
+                                    <label class="input-label">What values will guide your decision-making?</label>
+                                    <div class="multiple-choice-options">
+                                        <div class="choice-option" onclick="selectChoice(this, 's1_values')" data-value="safety_service">
+                                            <div class="choice-label">Safety & Service First</div>
+                                            <div class="choice-text">Prioritize community safety and public service above all other considerations, even if it means difficult conversations.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's1_values')" data-value="integrity_accountability">
+                                            <div class="choice-label">Integrity & Accountability</div>
+                                            <div class="choice-text">Focus on honest communication and clear accountability to rebuild trust and prevent future issues.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's1_values')" data-value="collaboration_excellence">
+                                            <div class="choice-label">Collaboration & Excellence</div>
+                                            <div class="choice-text">Emphasize teamwork and continuous improvement to turn this setback into a learning opportunity.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="decision-input">
+                                    <label class="input-label">What are the real stakes beyond immediate pressure?</label>
+                                    <div class="multiple-choice-options">
+                                        <div class="choice-option" onclick="selectChoice(this, 's1_stakes')" data-value="operational">
+                                            <div class="choice-label">Operational Effectiveness</div>
+                                            <div class="choice-text">Future coordination capacity and the ability to respond effectively to similar situations.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's1_stakes')" data-value="relationships">
+                                            <div class="choice-label">Stakeholder Relationships</div>
+                                            <div class="choice-text">Trust with team members, partner agencies, and the communities we serve.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's1_stakes')" data-value="culture">
+                                            <div class="choice-label">Organizational Culture</div>
+                                            <div class="choice-text">Whether we become more resilient and adaptive or more risk-averse and bureaucratic.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's1_stakes')" data-value="credibility">
+                                            <div class="choice-label">Leadership Credibility</div>
+                                            <div class="choice-text">My ability to lead effectively in future crises and maintain team confidence.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="decision-phase" id="s1phase3">
+                            <div class="phase-header">
+                                <div class="phase-title-row">
+                                    <h3 class="phase-title">Generate Options Within Values Framework</h3>
+                                    <div class="phase-timer" id="s1timer3">90s</div>
+                                </div>
+                                <p class="phase-description">Brainstorm multiple approaches that honor your values while addressing the situation effectively.</p>
+                            </div>
+                            <div class="phase-content">
+                                <div class="coaching-prompts">
+                                    <div class="prompt-title">Creative Problem-Solving</div>
+                                    <ul class="prompt-list">
+                                        <li>How can I address this situation while maintaining specific values?</li>
+                                        <li>What would a leader I admire do in this situation?</li>
+                                        <li>What creative approaches honor both urgency and values?</li>
+                                    </ul>
+                                </div>
+                                <div class="decision-input">
+                                    <label class="input-label">Choose your primary approach to address the situation:</label>
+                                    <div class="multiple-choice-options">
+                                        <div class="choice-option" onclick="selectChoice(this, 's1_approach')" data-value="technical">
+                                            <div class="choice-label">Technical Response</div>
+                                            <div class="choice-text">Immediately investigate the breakdown, reassign responsibilities, and reinforce protocol adherence to prevent recurrence.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's1_approach')" data-value="mixed">
+                                            <div class="choice-label">Mixed Approach</div>
+                                            <div class="choice-text">Conduct a quick debrief to clarify what went wrong, reinforce protocols, and ask for staff input on necessary adaptations.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's1_approach')" data-value="adaptive">
+                                            <div class="choice-label">Adaptive Response</div>
+                                            <div class="choice-text">Use the missed delivery as a case study to explore deeper system gaps and communication breakdowns with the team.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="decision-input">
+                                    <label class="input-label">How will you implement your chosen approach while maintaining values?</label>
+                                    <div class="multiple-choice-options">
+                                        <div class="choice-option" onclick="selectChoice(this, 's1_implementation')" data-value="transparent">
+                                            <div class="choice-label">Transparent Process</div>
+                                            <div class="choice-text">Share findings openly with all stakeholders and involve them in developing solutions.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's1_implementation')" data-value="supportive">
+                                            <div class="choice-label">Supportive Approach</div>
+                                            <div class="choice-text">Focus on learning rather than blame, providing additional training and resources where needed.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's1_implementation')" data-value="systematic">
+                                            <div class="choice-label">Systematic Review</div>
+                                            <div class="choice-text">Establish clear timelines and check-in points to ensure systematic follow-through on improvements.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="decision-phase" id="s1phase4">
+                            <div class="phase-header">
+                                <div class="phase-title-row">
+                                    <h3 class="phase-title">Final Decision & Communication</h3>
+                                    <div class="phase-timer" id="s1timer4">30s</div>
+                                </div>
+                                <p class="phase-description">Make your final decision and plan how you'll communicate the values basis for your choice.</p>
+                            </div>
+                            <div class="phase-content">
+                                <div class="coaching-prompts">
+                                    <div class="prompt-title">Decision Integration</div>
+                                    <ul class="prompt-list">
+                                        <li>Which approach best honors your identified values?</li>
+                                        <li>How will you explain your reasoning to stakeholders?</li>
+                                        <li>What support do you need for effective implementation?</li>
+                                    </ul>
+                                </div>
+                                <div class="decision-input">
+                                    <label class="input-label">Your final decision and communication approach</label>
+                                    <div class="multiple-choice-options">
+                                        <div class="choice-option" onclick="selectChoice(this, 's1_final')" data-value="direct">
+                                            <div class="choice-label">Direct & Decisive</div>
+                                            <div class="choice-text">"We've identified the breakdown and are implementing immediate fixes. Here's what each team needs to do going forward."</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's1_final')" data-value="collaborative">
+                                            <div class="choice-label">Collaborative & Inclusive</div>
+                                            <div class="choice-text">"Let's work together to understand what happened and build better systems. I need your insights and commitment."</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's1_final')" data-value="learning">
+                                            <div class="choice-label">Learning-Focused</div>
+                                            <div class="choice-text">"This situation reveals important lessons. Let's use it to strengthen our capabilities and prevent future issues."</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's1_final')" data-value="values_based">
+                                            <div class="choice-label">Values-Driven</div>
+                                            <div class="choice-text">"Our commitment to safety and service means we must address this thoroughly while supporting our team's growth."</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="phase-controls" id="s1Controls" style="display: none;">
+                            <button class="btn btn-secondary" onclick="previousPhase()" id="s1PrevBtn">Previous</button>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="btn btn-secondary" onclick="pauseTimer()" id="s1PauseBtn">Pause</button>
+                                <button class="btn btn-primary" onclick="nextPhase()" id="s1NextBtn" disabled>Continue →</button>
+                            </div>
+                        </div>
+                        <div class="results-panel" id="s1Results">
+                            <div class="results-header">
+                                <h2 class="results-title">Scenario Complete!</h2>
+                                <p class="results-subtitle">Crisis Resource Allocation: Values under pressure</p>
+                            </div>
+                            <div class="scores-grid">
+                                <div class="score-card" id="s1ValuesCard">
+                                    <div class="score-value" id="s1ValuesScore"><span>--</span><span class="scale"> / 100</span></div>
+                                    <div class="score-label">Values Alignment</div>
+                                </div>
+                                <div class="score-card" id="s1QualityCard">
+                                    <div class="score-value" id="s1QualityScore"><span>--</span><span class="scale"> / 100</span></div>
+                                    <div class="score-label">Decision Quality</div>
+                                </div>
+                                <div class="score-card" id="s1ImpactCard">
+                                    <div class="score-value" id="s1ImpactScore"><span>--</span><span class="scale"> / 100</span></div>
+                                    <div class="score-label">Stakeholder Impact</div>
+                                </div>
+                                <div class="score-card" id="s1SystemsCard">
+                                    <div class="score-value" id="s1SystemsScore"><span>--</span><span class="scale"> / 100</span></div>
+                                    <div class="score-label">Systems Awareness</div>
+                                </div>
+                            </div>
+                            <div class="feedback-section">
+                                <h3 class="feedback-title">Performance Insights</h3>
+                                <div class="feedback-content" id="s1Feedback">
+                                    Your personalized feedback will appear here...
+                                </div>
+                            </div>
+                            <div class="next-step-section">
+                                <h3>Ready for the next challenge?</h3>
+                                <p>You have completed the 'Crisis Resource Allocation' scenario. Continue to the next scenario to test your skills further.</p>
+                                <button class="btn btn-primary" onclick="showTab('scenario2')">Continue to Media Crisis Communication →</button>
+                                <button class="btn btn-secondary" onclick="restartScenario(1)">Retry This Scenario</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div id="s3-feedback" style="background: rgba(76,175,80,0.1); border-radius: 10px; padding: 20px; margin: 20px 0;"></div>
-                <button class="btn" onclick="restartScenario(3)">🔄 Try Again</button>
-            </div>
+
+                <div id="scenario2" class="tab-content scenario-content scenario2-content">
+                    <div class="scenario-intro-card">
+                        <h2 class="scenario-title">
+                            <span class="scenario-icon"></span> Media Crisis Communication
+                        </h2>
+                        <p class="scenario-description">
+                            A serious incident has occurred in your area of responsibility. Initial reports are conflicting, but media attention is intensifying rapidly. You have partial information from field teams, but key facts are still being verified. Stakeholders are demanding immediate public statements, and social media speculation is growing. Your next communication decisions will significantly impact public trust, team morale, and the effectiveness of ongoing response efforts.
+                        </p>
+                        <div class="scenario-stats">
+                            <span>Focus: Crisis communication and stakeholder management</span>
+                            <span>4 phases ~5 minutes total</span>
+                            <span>Pressure Level: Extreme</span>
+                        </div>
+                        <button class="btn btn-primary" onclick="startScenarioPhases(2)" style="margin-top: 20px;">
+                            Begin Decision Sequence →
+                        </button>
+                    </div>
+                    <div id="scenario2Phases" style="display: none;">
+                        <div class="decision-phase" id="s2phase1">
+                            <div class="phase-header">
+                                <div class="phase-title-row">
+                                    <h3 class="phase-title">Information Assessment</h3>
+                                    <div class="phase-timer" id="s2timer1">20s</div>
+                                </div>
+                                <p class="phase-description">Quickly assess what you know versus what you assume, and identify your communication values.</p>
+                            </div>
+                            <div class="phase-content">
+                                <div class="coaching-prompts">
+                                    <div class="prompt-title">Assessment Questions</div>
+                                    <ul class="prompt-list">
+                                        <li>What do I actually know versus assume?</li>
+                                        <li>What are the verification requirements?</li>
+                                        <li>What values should guide information sharing?</li>
+                                    </ul>
+                                </div>
+                                <div class="decision-input">
+                                    <label class="input-label">What is your primary information challenge?</label>
+                                    <div class="multiple-choice-options">
+                                        <div class="choice-option" onclick="selectChoice(this, 's2_info_challenge')" data-value="incomplete">
+                                            <div class="choice-label">Incomplete Information</div>
+                                            <div class="choice-text">Key facts are missing, but pressure to communicate is immediate and intense.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's2_info_challenge')" data-value="conflicting">
+                                            <div class="choice-label">Conflicting Reports</div>
+                                            <div class="choice-text">Different sources provide contradictory information about what happened.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's2_info_challenge')" data-value="speculation">
+                                            <div class="choice-label">Controlling Speculation</div>
+                                            <div class="choice-text">Rumors and misinformation are spreading faster than verified facts.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="values-checklist">
+                                    <div class="values-item" onclick="toggleValue(this)" data-value="integrity">
+                                        <div class="values-name">Integrity</div>
+                                        <div class="values-desc">Honest communication</div>
+                                    </div>
+                                    <div class="values-item" onclick="toggleValue(this)" data-value="transparency">
+                                        <div class="values-name">Transparency</div>
+                                        <div class="values-desc">Open information sharing</div>
+                                    </div>
+                                    <div class="values-item" onclick="toggleValue(this)" data-value="safety">
+                                        <div class="values-name">Safety</div>
+                                        <div class="values-desc">Protect public welfare</div>
+                                    </div>
+                                    <div class="values-item" onclick="toggleValue(this)" data-value="accountability">
+                                        <div class="values-name">Accountability</div>
+                                        <div class="values-desc">Take responsibility</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="decision-phase" id="s2phase2">
+                            <div class="phase-header">
+                                <div class="phase-title-row">
+                                    <h3 class="phase-title">Stakeholder Prioritization</h3>
+                                    <div class="phase-timer" id="s2timer2">45s</div>
+                                </div>
+                                <p class="phase-description">Identify all affected stakeholders and their legitimate communication needs.</p>
+                            </div>
+                            <div class="phase-content">
+                                <div class="coaching-prompts">
+                                    <div class="prompt-title">Stakeholder Analysis</div>
+                                    <ul class="prompt-list">
+                                        <li>Who are all affected stakeholders?</li>
+                                        <li>What are their legitimate information needs?</li>
+                                        <li>How do relationships factor into communication?</li>
+                                    </ul>
+                                </div>
+                                <div class="decision-input">
+                                    <label class="input-label">Which stakeholders should receive priority communication?</label>
+                                    <div class="multiple-choice-options">
+                                        <div class="choice-option" onclick="selectChoice(this, 's2_stakeholders')" data-value="affected">
+                                            <div class="choice-label">Directly Affected Parties</div>
+                                            <div class="choice-text">Those directly impacted by the incident deserve immediate, accurate information.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's2_stakeholders')" data-value="response">
+                                            <div class="choice-label">Response Teams</div>
+                                            <div class="choice-text">Field teams and partner agencies need clear information to coordinate effectively.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's2_stakeholders')" data-value="public">
+                                            <div class="choice-label">General Public</div>
+                                            <div class="choice-text">Community-wide transparency helps maintain trust and prevent panic.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's2_stakeholders')" data-value="leadership">
+                                            <div class="choice-label">Organizational Leadership</div>
+                                            <div class="choice-text">Senior leadership and oversight bodies need immediate briefings.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="decision-phase" id="s2phase3">
+                            <div class="phase-header">
+                                <div class="phase-title-row">
+                                    <h3 class="phase-title">Message Development</h3>
+                                    <div class="phase-timer" id="s2timer3">75s</div>
+                                </div>
+                                <p class="phase-description">Craft your core message balancing transparency with security and accuracy.</p>
+                            </div>
+                            <div class="phase-content">
+                                <div class="coaching-prompts">
+                                    <div class="prompt-title">Message Strategy</div>
+                                    <ul class="prompt-list">
+                                        <li>What must be communicated for safety?</li>
+                                        <li>How do I balance transparency with security?</li>
+                                        <li>What tone honors both urgency and respect?</li>
+                                    </ul>
+                                </div>
+                                <div class="decision-input">
+                                    <label class="input-label">What is your primary message approach?</label>
+                                    <div class="multiple-choice-options">
+                                        <div class="choice-option" onclick="selectChoice(this, 's2_message')" data-value="facts_only">
+                                            <div class="choice-label">Facts-Only Approach</div>
+                                            <div class="choice-text">"Here's what we know for certain. We'll provide updates as more information is verified."</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's2_message')" data-value="context">
+                                            <div class="choice-label">Context & Process</div>
+                                            <div class="choice-text">"This is what happened, why we're responding this way, and how we'll keep you informed."</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's2_message')" data-value="transparency">
+                                            <div class="choice-label">Full Transparency</div>
+                                            <div class="choice-text">"Here's everything we know, what we're still investigating, and what questions remain."</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="decision-phase" id="s2phase4">
+                            <div class="phase-header">
+                                <div class="phase-title-row">
+                                    <h3 class="phase-title">Communication Execution</h3>
+                                    <div class="phase-timer" id="s2timer4">25s</div>
+                                </div>
+                                <p class="phase-description">Choose your communication channels and timing strategy.</p>
+                            </div>
+                            <div class="phase-content">
+                                <div class="coaching-prompts">
+                                    <div class="prompt-title">Execution Strategy</div>
+                                    <ul class="prompt-list">
+                                        <li>What channels reach key audiences?</li>
+                                        <li>How do I sequence information release?</li>
+                                        <li>What follow-up commitment am I making?</li>
+                                    </ul>
+                                </div>
+                                <div class="decision-input">
+                                    <label class="input-label">Your communication execution plan</label>
+                                    <div class="multiple-choice-options">
+                                        <div class="choice-option" onclick="selectChoice(this, 's2_execution')" data-value="immediate">
+                                            <div class="choice-label">Immediate Public Statement</div>
+                                            <div class="choice-text">Issue comprehensive public statement now across all channels with commitment to updates.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's2_execution')" data-value="staged">
+                                            <div class="choice-label">Staged Communication</div>
+                                            <div class="choice-text">Brief key stakeholders first, then coordinated public release with consistent messaging.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's2_execution')" data-value="responsive">
+                                            <div class="choice-label">Responsive Approach</div>
+                                            <div class="choice-text">Establish regular communication schedule with proactive updates as information develops.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="phase-controls" id="s2Controls" style="display: none;">
+                            <button class="btn btn-secondary" onclick="previousPhase()" id="s2PrevBtn">Previous</button>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="btn btn-secondary" onclick="pauseTimer()" id="s2PauseBtn">Pause</button>
+                                <button class="btn btn-primary" onclick="nextPhase()" id="s2NextBtn" disabled>Continue →</button>
+                            </div>
+                        </div>
+                        <div class="results-panel" id="s2Results">
+                            <div class="results-header">
+                                <h2 class="results-title">Scenario Complete!</h2>
+                                <p class="results-subtitle">Media Crisis Communication under extreme pressure</p>
+                            </div>
+                            <div class="scores-grid">
+                                <div class="score-card" id="s2ValuesCard">
+                                    <div class="score-value" id="s2ValuesScore"><span>--</span><span class="scale"> / 100</span></div>
+                                    <div class="score-label">Values Alignment</div>
+                                </div>
+                                <div class="score-card" id="s2QualityCard">
+                                    <div class="score-value" id="s2QualityScore"><span>--</span><span class="scale"> / 100</span></div>
+                                    <div class="score-label">Decision Quality</div>
+                                </div>
+                                <div class="score-card" id="s2ImpactCard">
+                                    <div class="score-value" id="s2ImpactScore"><span>--</span><span class="scale"> / 100</span></div>
+                                    <div class="score-label">Stakeholder Impact</div>
+                                </div>
+                                <div class="score-card" id="s2SystemsCard">
+                                    <div class="score-value" id="s2SystemsScore"><span>--</span><span class="scale"> / 100</span></div>
+                                    <div class="score-label">Systems Awareness</div>
+                                </div>
+                            </div>
+                            <div class="feedback-section">
+                                <h3 class="feedback-title">Performance Insights</h3>
+                                <div class="feedback-content" id="s2Feedback">
+                                    Your personalized feedback will appear here...
+                                </div>
+                            </div>
+                            <div class="next-step-section">
+                                <h3>On to the final scenario!</h3>
+                                <p>You have completed the 'Media Crisis Communication' scenario. Your final test awaits.</p>
+                                <button class="btn btn-primary" onclick="showTab('scenario3')">Continue to Ethical Policy Conflict →</button>
+                                <button class="btn btn-secondary" onclick="restartScenario(2)">Retry This Scenario</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="scenario3" class="tab-content scenario-content scenario3-content">
+                    <div class="scenario-intro-card">
+                        <h2 class="scenario-title">
+                            <span class="scenario-icon"></span> Ethical Policy Conflict
+                        </h2>
+                        <p class="scenario-description">
+                            Your organization has been directed to implement a new policy that conflicts with established community practices and values. The policy comes from senior leadership with clear expectations for compliance, but early community feedback reveals significant ethical concerns and potential negative impacts on vulnerable populations. Team members are divided—some support strict compliance, others advocate for community concerns. You must decide how to navigate this values conflict while maintaining your responsibilities to both leadership and community.
+                        </p>
+                        <div class="scenario-stats">
+                            <span>Focus: Ethical decision-making and stakeholder balance</span>
+                            <span>4 phases ~6 minutes total</span>
+                            <span>Pressure Level: Maximum</span>
+                        </div>
+                        <button class="btn btn-primary" onclick="startScenarioPhases(3)" style="margin-top: 20px;">
+                            Begin Decision Sequence →
+                        </button>
+                    </div>
+                    <div id="scenario3Phases" style="display: none;">
+                        <div class="decision-phase" id="s3phase1">
+                            <div class="phase-header">
+                                <div class="phase-title-row">
+                                    <h3 class="phase-title">Values Conflict Analysis</h3>
+                                    <div class="phase-timer" id="s3timer1">30s</div>
+                                </div>
+                                <p class="phase-description">Identify what values are in tension and where creative solutions might exist.</p>
+                            </div>
+                            <div class="phase-content">
+                                <div class="coaching-prompts">
+                                    <div class="prompt-title">Conflict Analysis</div>
+                                    <ul class="prompt-list">
+                                        <li>What values are creating tension?</li>
+                                        <li>What are the non-negotiable principles?</li>
+                                        <li>Where might creative solutions exist?</li>
+                                    </ul>
+                                </div>
+                                <div class="decision-input">
+                                    <label class="input-label">What is the core values conflict you're facing?</label>
+                                    <div class="multiple-choice-options">
+                                        <div class="choice-option" onclick="selectChoice(this, 's3_conflict')" data-value="compliance_community">
+                                            <div class="choice-label">Compliance vs. Community Impact</div>
+                                            <div class="choice-text">Organizational expectations conflict with potential harm to vulnerable community members.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's3_conflict')" data-value="loyalty_integrity">
+                                            <div class="choice-label">Loyalty vs. Integrity</div>
+                                            <div class="choice-text">Being a team player conflicts with speaking truth about policy concerns.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's3_conflict')" data-value="efficiency_equity">
+                                            <div class="choice-label">Efficiency vs. Equity</div>
+                                            <div class="choice-text">Streamlined implementation conflicts with ensuring fair outcomes for all populations.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="values-checklist">
+                                    <div class="values-item" onclick="toggleValue(this)" data-value="integrity">
+                                        <div class="values-name">Integrity</div>
+                                        <div class="values-desc">Honest communication</div>
+                                    </div>
+                                    <div class="values-item" onclick="toggleValue(this)" data-value="service">
+                                        <div class="values-name">Service</div>
+                                        <div class="values-desc">Community welfare</div>
+                                    </div>
+                                    <div class="values-item" onclick="toggleValue(this)" data-value="accountability">
+                                        <div class="values-name">Accountability</div>
+                                        <div class="values-desc">Take responsibility</div>
+                                    </div>
+                                    <div class="values-item" onclick="toggleValue(this)" data-value="excellence">
+                                        <div class="values-name">Excellence</div>
+                                        <div class="values-desc">High standards</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="decision-phase" id="s3phase2">
+                            <div class="phase-header">
+                                <div class="phase-title-row">
+                                    <h3 class="phase-title">Impact Assessment</h3>
+                                    <div class="phase-timer" id="s3timer2">60s</div>
+                                </div>
+                                <p class="phase-description">Analyze who benefits and who bears costs across different implementation approaches.</p>
+                            </div>
+                            <div class="phase-content">
+                                <div class="coaching-prompts">
+                                    <div class="prompt-title">Impact Analysis</div>
+                                    <ul class="prompt-list">
+                                        <li>Who benefits and who bears costs?</li>
+                                        <li>What are unintended consequences?</li>
+                                        <li>How do power dynamics affect implementation?</li>
+                                    </ul>
+                                </div>
+                                <div class="decision-input">
+                                    <label class="input-label">Which impact concerns you most about the current policy direction?</label>
+                                    <div class="multiple-choice-options">
+                                        <div class="choice-option" onclick="selectChoice(this, 's3_impact')" data-value="vulnerable">
+                                            <div class="choice-label">Vulnerable Population Effects</div>
+                                            <div class="choice-text">The policy may disproportionately harm those with the least voice and fewest resources.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's3_impact')" data-value="trust">
+                                            <div class="choice-label">Community Trust Erosion</div>
+                                            <div class="choice-text">Implementation without addressing concerns could damage long-term community relationships.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's3_impact')" data-value="team_morale">
+                                            <div class="choice-label">Team Cohesion</div>
+                                            <div class="choice-text">The internal conflict is affecting team effectiveness and shared commitment.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's3_impact')" data-value="precedent">
+                                            <div class="choice-label">Organizational Precedent</div>
+                                            <div class="choice-text">How this is handled sets expectations for future policy conflicts and ethical decisions.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="decision-phase" id="s3phase3">
+                            <div class="phase-header">
+                                <div class="phase-title-row">
+                                    <h3 class="phase-title">Solution Development</h3>
+                                    <div class="phase-timer" id="s3timer3">90s</div>
+                                </div>
+                                <p class="phase-description">Generate approaches that honor both organizational requirements and ethical concerns.</p>
+                            </div>
+                            <div class="phase-content">
+                                <div class="coaching-prompts">
+                                    <div class="prompt-title">Creative Solutions</div>
+                                    <ul class="prompt-list">
+                                        <li>What approaches honor both mandates and community?</li>
+                                        <li>How can I advocate effectively within constraints?</li>
+                                        <li>What partnerships could create better outcomes?</li>
+                                    </ul>
+                                </div>
+                                <div class="decision-input">
+                                    <label class="input-label">What is your primary strategy for addressing this conflict?</label>
+                                    <div class="multiple-choice-options">
+                                        <div class="choice-option" onclick="selectChoice(this, 's3_strategy')" data-value="advocate_up">
+                                            <div class="choice-label">Upward Advocacy</div>
+                                            <div class="choice-text">Present community concerns to leadership with specific recommendations for policy modifications.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's3_strategy')" data-value="pilot">
+                                            <div class="choice-label">Pilot Implementation</div>
+                                            <div class="choice-text">Propose a limited pilot program to test approaches and gather data before full implementation.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's3_strategy')" data-value="enhanced">
+                                            <div class="choice-label">Enhanced Implementation</div>
+                                            <div class="choice-text">Implement the policy with additional safeguards and support systems to address ethical concerns.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's3_strategy')" data-value="stakeholder">
+                                            <div class="choice-label">Stakeholder Engagement</div>
+                                            <div class="choice-text">Create structured dialogue between leadership, community, and implementation team to find solutions.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="decision-phase" id="s3phase4">
+                            <div class="phase-header">
+                                <div class="phase-title-row">
+                                    <h3 class="phase-title">Decision Implementation</h3>
+                                    <div class="phase-timer" id="s3timer4">35s</div>
+                                </div>
+                                <p class="phase-description">Commit to your approach and plan for authentic communication about your decision.</p>
+                            </div>
+                            <div class="phase-content">
+                                <div class="coaching-prompts">
+                                    <div class="prompt-title">Implementation Planning</div>
+                                    <ul class="prompt-list">
+                                        <li>How do I explain this decision authentically?</li>
+                                        <li>What commitments am I making for ongoing adjustment?</li>
+                                        <li>How will I measure success against values?</li>
+                                    </ul>
+                                </div>
+                                <div class="decision-input">
+                                    <label class="input-label">Your final approach and commitment to stakeholders</label>
+                                    <div class="multiple-choice-options">
+                                        <div class="choice-option" onclick="selectChoice(this, 's3_final')" data-value="transparent">
+                                            <div class="choice-label">Transparent Process</div>
+                                            <div class="choice-text">"I'm implementing this with modifications based on your concerns, and here's how we'll monitor impact."</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's3_final')" data-value="accountable">
+                                            <div class="choice-label">Accountable Implementation</div>
+                                            <div class="choice-text">"I take responsibility for making this work ethically, with regular check-ins and adjustment processes."</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's3_final')" data-value="collaborative">
+                                            <div class="choice-label">Ongoing Collaboration</div>
+                                            <div class="choice-text">"This decision reflects our shared values. I need your continued partnership to ensure it serves everyone."</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's3_final')" data-value="adaptive">
+                                            <div class="choice-label">Adaptive Approach</div>
+                                            <div class="choice-text">"We'll start with this approach and adjust based on what we learn about real impacts."</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="phase-controls" id="s3Controls" style="display: none;">
+                            <button class="btn btn-secondary" onclick="previousPhase()" id="s3PrevBtn">Previous</button>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="btn btn-secondary" onclick="pauseTimer()" id="s3PauseBtn">Pause</button>
+                                <button class="btn btn-primary" onclick="nextPhase()" id="s3NextBtn" disabled>Continue →</button>
+                            </div>
+                        </div>
+                        <div class="results-panel" id="s3Results">
+                            <div class="results-header">
+                                <h2 class="results-title">All Scenarios Complete!</h2>
+                                <p class="results-subtitle">Ethical Policy Conflict: Values alignment under maximum pressure</p>
+                            </div>
+                            <div class="scores-grid">
+                                <div class="score-card" id="s3ValuesCard">
+                                    <div class="score-value" id="s3ValuesScore"><span>--</span><span class="scale"> / 100</span></div>
+                                    <div class="score-label">Values Alignment</div>
+                                </div>
+                                <div class="score-card" id="s3QualityCard">
+                                    <div class="score-value" id="s3QualityScore"><span>--</span><span class="scale"> / 100</span></div>
+                                    <div class="score-label">Decision Quality</div>
+                                </div>
+                                <div class="score-card" id="s3ImpactCard">
+                                    <div class="score-value" id="s3ImpactScore"><span>--</span><span class="scale"> / 100</span></div>
+                                    <div class="score-label">Stakeholder Impact</div>
+                                </div>
+                                <div class="score-card" id="s3SystemsCard">
+                                    <div class="score-value" id="s3SystemsScore"><span>--</span><span class="scale"> / 100</span></div>
+                                    <div class="score-label">Systems Awareness</div>
+                                </div>
+                            </div>
+                            <div class="feedback-section">
+                                <h3 class="feedback-title">Performance Insights</h3>
+                                <div class="feedback-content" id="s3Feedback">
+                                    Your personalized feedback will appear here...
+                                </div>
+                            </div>
+                            <div class="next-step-section">
+                                <h3>Congratulations! You've completed the training.</h3>
+                                <p>You have successfully navigated all high-pressure scenarios. Review your performance or retry any scenario to continue honing your skills in values-based leadership.</p>
+                                <button class="btn btn-secondary" onclick="restartScenario(3)">Retry Final Scenario</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timer-display" id="timerDisplay">
+                    <div class="timer-ring" id="timerRing"></div>
+                    <div class="timer-value" id="timerValue">15</div>
+                    <div class="timer-label">SECONDS</div>
+                </div>
+            </main>
         </div>
     </div>
-
     <script>
         let currentTab = 'intro';
         let currentScenario = 0;
         let currentPhase = 0;
-        let timer = null;
-        let timeLeft = 0;
+        let timerInterval = null;
+        let currentTimer = 0;
         let isPaused = false;
+        let userResponses = {};
+        let scenarioScores = {};
         let coachingInterval = null;
-        let userChoices = {};
-        let scores = { values: 0, quality: 0, impact: 0, systems: 0 };
 
         const scenarios = {
             1: {
+                title: "Crisis Resource Allocation",
                 phases: [
-                    { time: 15, title: "Ground & Center", prompts: ["What are the real consequences?", "Which values are most relevant?", "Take three deep breaths"] },
-                    { time: 60, title: "Clarify Stakes", prompts: ["What values will guide decisions?", "What are the real stakes?", "How do you want to be remembered?"] },
-                    { time: 90, title: "Generate Options", prompts: ["How to maintain values?", "What would a great leader do?", "Creative approaches that honor ethics?"] },
-                    { time: 30, title: "Final Decision", prompts: ["Which balances values and effectiveness?", "How to communicate reasoning?", "What support is needed?"] }
+                    { time: 15, prompts: ["What are the real consequences for community safety?", "What physical sensations of stress am I experiencing?", "Which leadership values are most relevant here?", "Take three deep breaths before responding", "What would my best self do in this situation?"] },
+                    { time: 60, prompts: ["What values will guide my decision?", "What are the real stakes beyond immediate pressure?", "How do I want to be remembered for this?", "What are the long-term implications of my choice?", "Who are all the stakeholders affected by this decision?"] },
+                    { time: 90, prompts: ["How can I address this while maintaining values?", "What would an exemplary leader do?", "What creative approaches honor both urgency and ethics?", "What if I had unlimited time what would I do differently?", "How can I turn this crisis into an opportunity?"] },
+                    { time: 30, prompts: ["Which option balances values with effectiveness?", "How will I communicate my reasoning?", "What implementation support do I need?", "What would I tell my team about why I chose this approach?", "How does this decision align with my core values?"] }
                 ]
             },
             2: {
+                title: "Media Crisis Communication",
                 phases: [
-                    { time: 20, title: "Information Assessment", prompts: ["What do I know vs assume?", "What values guide information sharing?"] },
-                    { time: 45, title: "Stakeholder Prioritization", prompts: ["Who are affected stakeholders?", "What are their legitimate needs?"] },
-                    { time: 75, title: "Message Development", prompts: ["Balance transparency with security?", "What tone honors urgency and respect?"] },
-                    { time: 25, title: "Communication Execution", prompts: ["What channels reach key audiences?", "What follow-up commitment?"] }
+                    { time: 20, prompts: ["What do I actually know versus assume?", "What are the verification requirements?", "What values guide information sharing?", "How quickly does accurate information need to flow?", "What's the cost of waiting versus acting now?"] },
+                    { time: 45, prompts: ["Who are all affected stakeholders?", "What are their legitimate information needs?", "How do relationships factor into communication?", "Which voices am I prioritizing and why?", "What power dynamics affect information access?"] },
+                    { time: 75, prompts: ["What must be communicated for safety?", "How do I balance transparency with security?", "What tone honors both urgency and respect?", "How do I prevent misinformation while being honest?", "What message will build rather than erode trust?"] },
+                    { time: 25, prompts: ["What channels reach key audiences most effectively?", "How do I sequence information release?", "What follow-up commitment am I making?", "How will I handle follow-up questions?", "What does accountability look like here?"] }
                 ]
             },
             3: {
+                title: "Ethical Policy Conflict",
                 phases: [
-                    { time: 30, title: "Values Conflict Analysis", prompts: ["What values create tension?", "Where might solutions exist?"] },
-                    { time: 60, title: "Impact Assessment", prompts: ["Who benefits and bears costs?", "What are unintended consequences?"] },
-                    { time: 90, title: "Solution Development", prompts: ["Honor both mandates and community?", "How to advocate within constraints?"] },
-                    { time: 35, title: "Decision Implementation", prompts: ["How to explain authentically?", "What ongoing commitments?"] }
+                    { time: 30, prompts: ["What values are creating tension in this situation?", "What are the non-negotiable principles I must maintain?", "Where might creative solutions honor multiple perspectives?", "What would happen if I ignore one side of this conflict?", "How do I stay true to my deepest leadership values?"] },
+                    { time: 60, prompts: ["Who benefits and who bears costs from different approaches?", "What are the unintended consequences I need to consider?", "How do power dynamics affect implementation success?", "What voices might be missing from this conversation?", "How does this decision affect future organizational culture?"] },
+                    { time: 90, prompts: ["What approaches honor both organizational requirements and community needs?", "How can I advocate effectively within my constraints?", "What partnerships could create better outcomes for everyone?", "What would courage look like in this situation?", "How do I turn this conflict into an opportunity for growth?"] },
+                    { time: 35, prompts: ["How do I explain this decision authentically to all stakeholders?", "What commitments am I making for ongoing adjustment?", "How will I measure success against my core values?", "What support do I need to implement this ethically?", "How does this decision reflect who I want to be as a leader?"] }
                 ]
             }
         };
 
-        const phaseContent = {
-            1: [
-                {
-                    question: "What is the core challenge you're facing?",
-                    choices: [
-                        { id: "coord", title: "Coordination Breakdown", desc: "Communication failures between agencies led to the problem" },
-                        { id: "account", title: "Accountability Crisis", desc: "Determining responsibility and preventing future failures" },
-                        { id: "trust", title: "Team Trust & Morale", desc: "Rebuilding confidence while maintaining effectiveness" },
-                        { id: "systems", title: "System Resilience", desc: "Addressing deeper vulnerabilities to prevent cascading failures" }
-                    ],
-                    values: true
-                },
-                {
-                    question: "What values will guide your decision-making?",
-                    choices: [
-                        { id: "safety_service", title: "Safety & Service First", desc: "Prioritize community safety and public service above all" },
-                        { id: "integrity_account", title: "Integrity & Accountability", desc: "Focus on honest communication and clear accountability" },
-                        { id: "collab_excellence", title: "Collaboration & Excellence", desc: "Emphasize teamwork and continuous improvement" }
-                    ]
-                },
-                {
-                    question: "Choose your primary approach:",
-                    choices: [
-                        { id: "technical", title: "Technical Response", desc: "Investigate, reassign responsibilities, reinforce protocols" },
-                        { id: "mixed", title: "Mixed Approach", desc: "Quick debrief, reinforce protocols, gather staff input" },
-                        { id: "adaptive", title: "Adaptive Response", desc: "Use as case study to explore deeper system gaps" }
-                    ]
-                },
-                {
-                    question: "Your final decision and communication approach:",
-                    choices: [
-                        { id: "direct", title: "Direct & Decisive", desc: "Clear fixes with specific team responsibilities" },
-                        { id: "collaborative", title: "Collaborative & Inclusive", desc: "Work together with team insights and commitment" },
-                        { id: "learning", title: "Learning-Focused", desc: "Use situation to strengthen capabilities" },
-                        { id: "values_based", title: "Values-Driven", desc: "Address thoroughly while supporting team growth" }
-                    ]
-                }
-            ],
-            2: [
-                {
-                    question: "What is your primary information challenge?",
-                    choices: [
-                        { id: "incomplete", title: "Incomplete Information", desc: "Key facts missing but pressure to communicate is intense" },
-                        { id: "conflicting", title: "Conflicting Reports", desc: "Different sources provide contradictory information" },
-                        { id: "speculation", title: "Controlling Speculation", desc: "Rumors spreading faster than verified facts" }
-                    ],
-                    values: true
-                },
-                {
-                    question: "Which stakeholders should receive priority communication?",
-                    choices: [
-                        { id: "affected", title: "Directly Affected Parties", desc: "Those directly impacted deserve immediate, accurate information" },
-                        { id: "response", title: "Response Teams", desc: "Field teams need clear information to coordinate effectively" },
-                        { id: "public", title: "General Public", desc: "Community-wide transparency maintains trust" },
-                        { id: "leadership", title: "Organizational Leadership", desc: "Senior leadership needs immediate briefings" }
-                    ]
-                },
-                {
-                    question: "What is your primary message approach?",
-                    choices: [
-                        { id: "facts_only", title: "Facts-Only Approach", desc: "Share only verified information with update commitments" },
-                        { id: "context", title: "Context & Process", desc: "Explain what happened, response, and communication plan" },
-                        { id: "transparency", title: "Full Transparency", desc: "Share everything known, investigating, and remaining questions" }
-                    ]
-                },
-                {
-                    question: "Your communication execution plan:",
-                    choices: [
-                        { id: "immediate", title: "Immediate Public Statement", desc: "Comprehensive statement now across all channels" },
-                        { id: "staged", title: "Staged Communication", desc: "Brief key stakeholders first, then public release" },
-                        { id: "responsive", title: "Responsive Approach", desc: "Regular schedule with proactive updates" }
-                    ]
-                }
-            ],
-            3: [
-                {
-                    question: "What is the core values conflict you're facing?",
-                    choices: [
-                        { id: "compliance", title: "Compliance vs. Community Impact", desc: "Organizational expectations vs. potential community harm" },
-                        { id: "loyalty", title: "Loyalty vs. Integrity", desc: "Being a team player vs. speaking truth about concerns" },
-                        { id: "efficiency", title: "Efficiency vs. Equity", desc: "Streamlined implementation vs. fair outcomes for all" }
-                    ],
-                    values: true
-                },
-                {
-                    question: "Which impact concerns you most?",
-                    choices: [
-                        { id: "vulnerable", title: "Vulnerable Population Effects", desc: "Policy may harm those with least voice and resources" },
-                        { id: "trust", title: "Community Trust Erosion", desc: "Implementation without addressing concerns damages relationships" },
-                        { id: "team_morale", title: "Team Cohesion", desc: "Internal conflict affecting team effectiveness" },
-                        { id: "precedent", title: "Organizational Precedent", desc: "How this is handled sets future expectations" }
-                    ]
-                },
-                {
-                    question: "What is your primary strategy?",
-                    choices: [
-                        { id: "advocate_up", title: "Upward Advocacy", desc: "Present community concerns with specific recommendations" },
-                        { id: "pilot", title: "Pilot Implementation", desc: "Limited pilot to test approaches and gather data" },
-                        { id: "enhanced", title: "Enhanced Implementation", desc: "Implement with additional safeguards and support" },
-                        { id: "stakeholder", title: "Stakeholder Engagement", desc: "Structured dialogue between all parties" }
-                    ]
-                },
-                {
-                    question: "Your final approach and commitment:",
-                    choices: [
-                        { id: "transparent", title: "Transparent Process", desc: "Implementing with modifications based on concerns" },
-                        { id: "accountable", title: "Accountable Implementation", desc: "Take responsibility with regular check-ins" },
-                        { id: "collaborative", title: "Ongoing Collaboration", desc: "Decision reflects shared values, need partnership" },
-                        { id: "adaptive", title: "Adaptive Approach", desc: "Start with this approach, adjust based on learning" }
-                    ]
-                }
-            ]
-        };
-
         function showTab(tabName) {
-            if (tabName !== 'intro' && document.getElementById('completion').classList.contains('hidden')) {
+            if (tabName !== 'intro' && !document.getElementById('completionIndicator').classList.contains('show')) {
                 return;
             }
-
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
-
-            if (tabName === 'intro') {
-                document.querySelector('.tab').classList.add('active');
-            } else {
-                document.getElementById(`tab${tabName.slice(-1)}`).classList.add('active');
-            }
-
-            document.getElementById(tabName).classList.remove('hidden');
+            document.querySelectorAll('.tab-item').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tabName).classList.add('active');
             currentTab = tabName;
+            if (tabName === 'intro') {
+                document.getElementById('timerDisplay').classList.remove('active');
+                document.getElementById('activeCoaching').style.display = 'none';
+                clearInterval(coachingInterval);
+            }
         }
 
         function enableScenarios() {
-            document.querySelectorAll('.tab.disabled').forEach(tab => {
+            document.querySelectorAll('.tab-item.disabled').forEach(tab => {
                 tab.classList.remove('disabled');
             });
-            document.getElementById('completion').classList.remove('hidden');
+            document.getElementById('completionIndicator').classList.add('show');
         }
 
-        function startScenario(num) {
-            currentScenario = num;
+        function startScenarioPhases(scenarioNum) {
+            currentScenario = scenarioNum;
             currentPhase = 0;
-            userChoices = {};
-            scores = { values: 0, quality: 0, impact: 0, systems: 0 };
-            
-            document.getElementById(`s${num}-intro`).classList.add('hidden');
-            document.getElementById(`s${num}-phases`).classList.remove('hidden');
-            
-            loadPhase(num, 0);
-            updateStatusBar();
+            userResponses = {};
+            document.querySelector(`#scenario${scenarioNum} .scenario-intro-card`).style.display = 'none';
+            document.getElementById(`scenario${scenarioNum}Phases`).style.display = 'block';
+            document.getElementById(`s${scenarioNum}Controls`).style.display = 'flex';
+            document.getElementById('activeCoaching').style.display = 'block';
+            scenarioScores[scenarioNum] = {
+                values_alignment: 0,
+                decision_quality: 0,
+                stakeholder_impact: 0,
+                systems_awareness: 0
+            };
+            updateProgressIndicator(scenarioNum, 0);
+            updateStatusBar(scenarioNum);
+            startPhase(scenarioNum);
         }
 
-        function loadPhase(scenarioNum, phaseNum) {
+        function updateProgressIndicator(scenarioNum, phase) {
+            const progressIndicator = document.getElementById('progressIndicator');
+            const progressBar = document.getElementById('progressBar');
+            const totalPhases = scenarios[scenarioNum].phases.length;
+            const progress = (phase / totalPhases) * 100;
+            progressIndicator.textContent = `Scenario ${scenarioNum}: Phase ${phase + 1} of ${totalPhases}`;
+            progressBar.style.width = progress + '%';
+        }
+
+        function startPhase(scenarioNum) {
             const scenario = scenarios[scenarioNum];
-            const phase = scenario.phases[phaseNum];
-            const content = phaseContent[scenarioNum][phaseNum];
-
-            document.getElementById(`s${scenarioNum}-phase-title`).textContent = `Phase ${phaseNum + 1}: ${phase.title}`;
-            
-            let html = `<div class="choice-group">
-                <div class="choice-label">${content.question}</div>`;
-            
-            content.choices.forEach(choice => {
-                html += `<div class="choice-option" onclick="selectChoice(${scenarioNum}, '${choice.id}')">
-                    <div class="choice-title">${choice.title}</div>
-                    <div class="choice-desc">${choice.desc}</div>
-                </div>`;
-            });
-            
-            html += `</div>`;
-            
-            if (content.values) {
-                html += `<div class="choice-group">
-                    <div class="choice-label">Select relevant values:</div>
-                    <div class="values-grid">
-                        <div class="value-card" onclick="selectValue('integrity')">
-                            <strong>Integrity</strong><br>Honest communication
-                        </div>
-                        <div class="value-card" onclick="selectValue('safety')">
-                            <strong>Safety</strong><br>Community well-being
-                        </div>
-                        <div class="value-card" onclick="selectValue('service')">
-                            <strong>Service</strong><br>Public good focus
-                        </div>
-                        <div class="value-card" onclick="selectValue('accountability')">
-                            <strong>Accountability</strong><br>Own decisions
-                        </div>
-                    </div>
-                </div>`;
+            const phase = scenario.phases[currentPhase];
+            document.querySelectorAll(`#scenario${scenarioNum}Phases .decision-phase`).forEach(p => p.classList.remove('active'));
+            const phaseElement = document.getElementById(`s${scenarioNum}phase${currentPhase + 1}`);
+            if (phaseElement) {
+                phaseElement.classList.add('active');
             }
-            
-            document.getElementById(`s${scenarioNum}-content`).innerHTML = html;
-            
-            startTimer(scenarioNum, phase.time);
-            startCoaching(scenarioNum, phase.prompts);
-            
-            document.getElementById(`s${scenarioNum}-prev`).disabled = phaseNum === 0;
-            document.getElementById(`s${scenarioNum}-next`).disabled = true;
+            startCoachingRotation(phase.prompts);
+            updateProgressIndicator(scenarioNum, currentPhase);
+            startTimer(phase.time, scenarioNum);
+            updatePressure();
+            const prevBtn = document.getElementById(`s${scenarioNum}PrevBtn`);
+            const nextBtn = document.getElementById(`s${scenarioNum}NextBtn`);
+            if (prevBtn) prevBtn.disabled = currentPhase === 0;
+            if (nextBtn) nextBtn.disabled = true;
         }
 
-        function selectChoice(scenarioNum, choiceId) {
-            document.querySelectorAll(`#s${scenarioNum}-content .choice-option`).forEach(opt => {
-                opt.classList.remove('selected');
-            });
-            event.target.closest('.choice-option').classList.add('selected');
-            
-            if (!userChoices[currentPhase]) userChoices[currentPhase] = {};
-            userChoices[currentPhase].choice = choiceId;
-            
-            checkCompletion(scenarioNum);
-        }
-
-        function selectValue(valueId) {
-            event.target.classList.toggle('selected');
-            
-            if (!userChoices[currentPhase]) userChoices[currentPhase] = {};
-            if (!userChoices[currentPhase].values) userChoices[currentPhase].values = [];
-            
-            const values = userChoices[currentPhase].values;
-            if (values.includes(valueId)) {
-                userChoices[currentPhase].values = values.filter(v => v !== valueId);
-            } else {
-                userChoices[currentPhase].values.push(valueId);
+        function startCoachingRotation(prompts) {
+            clearInterval(coachingInterval);
+            let promptIndex = 0;
+            function updatePrompt() {
+                document.getElementById('activePrompt').textContent = prompts[promptIndex];
+                promptIndex = (promptIndex + 1) % prompts.length;
             }
-            
-            checkCompletion(currentScenario);
+            updatePrompt();
+            coachingInterval = setInterval(updatePrompt, 4000);
         }
 
-        function checkCompletion(scenarioNum) {
-            const hasChoice = userChoices[currentPhase] && userChoices[currentPhase].choice;
-            const hasValues = currentPhase === 0 ? 
-                (userChoices[currentPhase] && userChoices[currentPhase].values && userChoices[currentPhase].values.length > 0) : 
-                true;
-            
-            document.getElementById(`s${scenarioNum}-next`).disabled = !(hasChoice && hasValues);
-        }
-
-        function startTimer(scenarioNum, seconds) {
-            timeLeft = seconds;
-            const timerEl = document.getElementById(`s${scenarioNum}-timer`);
-            
-            clearInterval(timer);
-            timer = setInterval(() => {
+        function startTimer(seconds, scenarioNum) {
+            currentTimer = seconds;
+            const timerDisplay = document.getElementById('timerDisplay');
+            timerDisplay.classList.add('active');
+            updateTimerDisplay(scenarioNum);
+            timerInterval = setInterval(() => {
                 if (!isPaused) {
-                    timeLeft--;
-                    timerEl.textContent = timeLeft + 's';
-                    
-                    if (timeLeft <= 5) {
-                        timerEl.style.background = 'rgba(255,87,87,0.9)';
-                    } else if (timeLeft <= 10) {
-                        timerEl.style.background = 'rgba(255,193,7,0.8)';
-                    }
-                    
-                    if (timeLeft <= 0) {
-                        clearInterval(timer);
-                        document.getElementById(`s${scenarioNum}-next`).disabled = false;
+                    currentTimer--;
+                    updateTimerDisplay(scenarioNum);
+                    if (currentTimer <= 0) {
+                        clearInterval(timerInterval);
+                        autoAdvancePhase(scenarioNum);
                     }
                 }
             }, 1000);
         }
 
-        function startCoaching(scenarioNum, prompts) {
-            let promptIndex = 0;
-            const promptEl = document.getElementById(`s${scenarioNum}-prompt`);
-            
-            clearInterval(coachingInterval);
-            
-            function updatePrompt() {
-                promptEl.textContent = prompts[promptIndex];
-                promptIndex = (promptIndex + 1) % prompts.length;
-            }
-            
-            updatePrompt();
-            coachingInterval = setInterval(updatePrompt, 3000);
-        }
-
-        function nextPhase(scenarioNum) {
-            // Calculate and add scores
-            const phaseScore = calculatePhaseScore();
-            scores.values += phaseScore.values;
-            scores.quality += phaseScore.quality;
-            scores.impact += phaseScore.impact;
-            scores.systems += phaseScore.systems;
-            
-            updateStatusBar();
-            
-            clearInterval(timer);
-            clearInterval(coachingInterval);
-            
-            currentPhase++;
-            if (currentPhase >= scenarios[scenarioNum].phases.length) {
-                showResults(scenarioNum);
+        function updateTimerDisplay(scenarioNum) {
+            const timerValue = document.getElementById('timerValue');
+            const timerRing = document.getElementById('timerRing');
+            const originalTime = scenarios[scenarioNum].phases[currentPhase].time;
+            timerValue.textContent = Math.max(0, currentTimer);
+            const progress = ((originalTime - currentTimer) / originalTime) * 100;
+            timerRing.style.setProperty('--progress', `${progress}%`);
+            if (currentTimer <= 5) {
+                timerValue.style.color = '#e74c3c';
+                document.getElementById('timerDisplay').style.borderColor = 'rgba(231, 76, 60, 0.8)';
+            } else if (currentTimer <= 10) {
+                timerValue.style.color = '#f39c12';
+                document.getElementById('timerDisplay').style.borderColor = 'rgba(243, 156, 18, 0.8)';
             } else {
-                loadPhase(scenarioNum, currentPhase);
+                timerValue.style.color = '#ffffff';
+                document.getElementById('timerDisplay').style.borderColor = 'rgba(231, 76, 60, 0.3)';
             }
         }
 
-        function previousPhase(scenarioNum) {
-            if (currentPhase > 0) {
-                clearInterval(timer);
-                clearInterval(coachingInterval);
-                currentPhase--;
-                loadPhase(scenarioNum, currentPhase);
+        function nextPhase() {
+            clearInterval(timerInterval);
+            clearInterval(coachingInterval);
+            document.getElementById('timerDisplay').classList.remove('active');
+            collectPhaseResponses();
+            currentPhase++;
+            if (currentPhase >= scenarios[currentScenario].phases.length) {
+                completeScenario();
+            } else {
+                startPhase(currentScenario);
             }
+        }
+
+        function previousPhase() {
+            if (currentPhase > 0) {
+                clearInterval(timerInterval);
+                clearInterval(coachingInterval);
+                document.getElementById('timerDisplay').classList.remove('active');
+                currentPhase--;
+                startPhase(currentScenario);
+            }
+        }
+
+        function autoAdvancePhase(scenarioNum) {
+            document.getElementById(`s${scenarioNum}NextBtn`).disabled = false;
+            setTimeout(() => {
+                if (document.getElementById(`s${scenarioNum}NextBtn`) && !document.getElementById(`s${scenarioNum}NextBtn`).disabled) {
+                    nextPhase();
+                }
+            }, 2000);
         }
 
         function pauseTimer() {
             isPaused = !isPaused;
-            const pauseBtn = document.querySelector(`#s${currentScenario}-pause`);
-            pauseBtn.textContent = isPaused ? '▶️ Resume' : '⏸️ Pause';
+            const pauseBtn = document.getElementById(`s${currentScenario}PauseBtn`);
+            pauseBtn.textContent = isPaused ? 'Resume' : 'Pause';
         }
 
-        function calculatePhaseScore() {
-            const baseScore = 20;
-            const timeBonus = timeLeft > 0 ? 5 : 0;
-            const valueBonus = (userChoices[currentPhase] && userChoices[currentPhase].values) ? 
-                userChoices[currentPhase].values.length * 2 : 0;
-            
-            return {
-                values: baseScore + valueBonus + Math.floor(Math.random() * 5),
-                quality: baseScore + timeBonus + Math.floor(Math.random() * 5),
-                impact: baseScore + Math.floor(Math.random() * 8),
-                systems: baseScore + Math.floor(Math.random() * 6)
+        function collectPhaseResponses() {
+            const currentPhaseElement = document.querySelector(`#scenario${currentScenario}Phases .decision-phase.active`);
+            if (!currentPhaseElement) return;
+            const choiceSelections = {};
+            const selectedChoices = currentPhaseElement.querySelectorAll('.choice-option.selected');
+            selectedChoices.forEach(choice => {
+                const onclickAttr = choice.getAttribute('onclick');
+                const groupMatch = onclickAttr.match(/selectChoice\(this,\s*'([^']+)['"]\)/);
+                if (groupMatch) {
+                    const groupName = groupMatch[1];
+                    choiceSelections[groupName] = {
+                        value: choice.dataset.value,
+                        label: choice.querySelector('.choice-label')?.textContent || '',
+                        text: choice.querySelector('.choice-text')?.textContent || ''
+                    };
+                }
+            });
+            const selectedValues = Array.from(currentPhaseElement.querySelectorAll('.values-item.selected')).map(item => item.dataset.value);
+            const phaseData = {
+                phase: currentPhase,
+                timeRemaining: currentTimer,
+                choiceSelections: choiceSelections,
+                selectedValues: selectedValues,
+                totalTime: scenarios[currentScenario].phases[currentPhase].time
             };
+            userResponses[`phase${currentPhase}`] = phaseData;
+            updateScores(phaseData);
         }
 
-        function updateStatusBar() {
-            document.getElementById('valuesScore').textContent = scores.values;
-            document.getElementById('qualityScore').textContent = scores.quality;
-            document.getElementById('impactScore').textContent = scores.impact;
-            document.getElementById('systemsScore').textContent = scores.systems;
-        }
-
-        function showResults(scenarioNum) {
-            document.getElementById(`s${scenarioNum}-phases`).classList.add('hidden');
-            document.getElementById(`s${scenarioNum}-results`).classList.remove('hidden');
-            
-            document.getElementById(`s${scenarioNum}-values`).textContent = scores.values;
-            document.getElementById(`s${scenarioNum}-quality`).textContent = scores.quality;
-            document.getElementById(`s${scenarioNum}-impact`).textContent = scores.impact;
-            document.getElementById(`s${scenarioNum}-systems`).textContent = scores.systems;
-            
-            // Add score styling
-            const avgScore = (scores.values + scores.quality + scores.impact + scores.systems) / 4;
-            let feedback = '';
-            
-            if (avgScore >= 80) {
-                feedback = '🎉 Excellent performance! You maintained strong values alignment while making quality decisions under pressure.';
-                document.querySelectorAll(`#s${scenarioNum}-results .score-number`).forEach(el => el.className = 'score-number excellent');
-            } else if (avgScore >= 60) {
-                feedback = '👍 Good work! You showed solid decision-making with room for growth in maintaining systems awareness under pressure.';
-                document.querySelectorAll(`#s${scenarioNum}-results .score-number`).forEach(el => el.className = 'score-number good');
-            } else {
-                feedback = '💪 This scenario highlighted areas for development. Practice values clarification techniques for high-pressure situations.';
-                document.querySelectorAll(`#s${scenarioNum}-results .score-number`).forEach(el => el.className = 'score-number needs-improvement');
+        function updateScores(phaseData) {
+            if (!scenarioScores[currentScenario]) {
+                scenarioScores[currentScenario] = { values_alignment: 0, decision_quality: 0, stakeholder_impact: 0, systems_awareness: 0 };
             }
+            const timeScore = Math.min(1.0, (phaseData.totalTime - phaseData.timeRemaining) / phaseData.totalTime);
+            const choicesCount = Object.keys(phaseData.choiceSelections).length;
+            const choiceQuality = choicesCount > 0 ? 1.0 : 0.0;
+            const valuesEngagement = phaseData.selectedValues ? Math.min(1.0, phaseData.selectedValues.length * 0.25) : 0;
+            const baseScore = Math.round(25 * (choiceQuality * 0.7 + timeScore * 0.2 + valuesEngagement * 0.1));
+            const choiceBonus = getChoiceBonus(phaseData.choiceSelections);
+            scenarioScores[currentScenario].values_alignment += Math.round(baseScore * (1.1 + choiceBonus.values));
+            scenarioScores[currentScenario].decision_quality += Math.round(baseScore * (0.9 + choiceBonus.quality));
+            scenarioScores[currentScenario].stakeholder_impact += Math.round(baseScore * (0.8 + choiceBonus.stakeholder));
+            scenarioScores[currentScenario].systems_awareness += Math.round(baseScore * (0.7 + choiceBonus.systems));
+            updateStatusBar(currentScenario);
+        }
+
+        function getChoiceBonus(choiceSelections) {
+            let values = 0, quality = 0, stakeholder = 0, systems = 0;
+            Object.values(choiceSelections).forEach(choice => {
+                if (choice.value.includes('integrity') || choice.value.includes('accountability') || choice.value.includes('values')) {
+                    values += 0.1;
+                }
+                if (choice.value.includes('systematic') || choice.value.includes('quality') || choice.value.includes('excellence')) {
+                    quality += 0.1;
+                }
+                if (choice.value.includes('stakeholder') || choice.value.includes('community') || choice.value.includes('collaboration')) {
+                    stakeholder += 0.1;
+                }
+                if (choice.value.includes('systems') || choice.value.includes('adaptive') || choice.value.includes('holistic')) {
+                    systems += 0.1;
+                }
+            });
+            return { values, quality, stakeholder, systems };
+        }
+
+        function updateStatusBar(scenarioNum) {
+            if (scenarioScores[scenarioNum]) {
+                const scores = scenarioScores[scenarioNum];
+                const formatScore = (score) => `<span>${Math.min(100, Math.round(score))}</span><span class="scale"> / 100</span>`;
+                document.getElementById('valuesScore').innerHTML = formatScore(scores.values_alignment);
+                document.getElementById('decisionQuality').innerHTML = formatScore(scores.decision_quality);
+                document.getElementById('stakeholderImpact').innerHTML = formatScore(scores.stakeholder_impact);
+                document.getElementById('systemsAwareness').innerHTML = formatScore(scores.systems_awareness);
+            }
+        }
+
+        function updatePressure() {
+            const basePressure = (currentPhase + 1) * 20;
+            const timePressure = currentTimer < 10 ? 20 : 0;
+            const pressureLevel = Math.min(100, basePressure + timePressure + Math.random() * 10);
+            document.getElementById('pressureFill').style.width = pressureLevel + '%';
+        }
+
+        function selectChoice(element, groupName) {
+            const currentPhaseElement = document.querySelector(`#scenario${currentScenario}Phases .decision-phase.active`);
+            if (currentPhaseElement) {
+                const groupOptions = currentPhaseElement.querySelectorAll(`[onclick*="'${groupName}'"]`);
+                groupOptions.forEach(option => {
+                    if (option !== element) {
+                        option.classList.remove('selected');
+                    }
+                });
+            }
+            element.classList.toggle('selected');
+            checkCompletion();
+        }
+
+        function toggleValue(element) {
+            element.classList.toggle('selected');
+            checkCompletion();
+        }
+
+        function checkCompletion() {
+            if (currentScenario === 0) return;
+            const currentPhaseElement = document.querySelector(`#scenario${currentScenario}Phases .decision-phase.active`);
+            if (currentPhaseElement) {
+                const selectedChoices = currentPhaseElement.querySelectorAll('.choice-option.selected');
+                const selectedValues = currentPhaseElement.querySelectorAll('.values-item.selected');
+                
+                if (currentPhase === 0) {
+                    const hasChoice = selectedChoices.length > 0;
+                    const hasValues = selectedValues.length > 0;
+                    document.getElementById(`s${currentScenario}NextBtn`).disabled = !(hasChoice && hasValues);
+                } else {
+                    const choiceGroups = new Set();
+                    currentPhaseElement.querySelectorAll('.multiple-choice-options .choice-option').forEach(opt => {
+                         const onclickAttr = opt.getAttribute('onclick');
+                         const groupMatch = onclickAttr.match(/selectChoice\(this,\s*'([^']+)['"]\)/);
+                         if(groupMatch) choiceGroups.add(groupMatch[1]);
+                    });
+                    const answeredGroups = new Set();
+                    selectedChoices.forEach(choice => {
+                        const onclickAttr = choice.getAttribute('onclick');
+                        const groupMatch = onclickAttr.match(/selectChoice\(this,\s*'([^']+)['"]\)/);
+                        if (groupMatch) answeredGroups.add(groupMatch[1]);
+                    });
+                    document.getElementById(`s${currentScenario}NextBtn`).disabled = answeredGroups.size < choiceGroups.size;
+                }
+            }
+        }
+
+        function completeScenario() {
+            document.getElementById(`scenario${currentScenario}Phases`).style.display = 'none';
+            document.getElementById(`s${currentScenario}Controls`).style.display = 'none';
+            document.getElementById('timerDisplay').classList.remove('active');
+            clearInterval(coachingInterval);
+            document.getElementById(`s${currentScenario}Results`).classList.add('show');
+            updateFinalScoreDisplay(currentScenario);
+            generateFeedback(currentScenario);
+        }
+
+        function updateFinalScoreDisplay(scenarioNum) {
+            const scores = scenarioScores[scenarioNum];
+            const formatScore = (score) => `<span>${Math.min(100, Math.round(score))}</span><span class="scale"> / 100</span>`;
+
+            document.getElementById(`s${scenarioNum}ValuesScore`).innerHTML = formatScore(scores.values_alignment);
+            document.getElementById(`s${scenarioNum}QualityScore`).innerHTML = formatScore(scores.decision_quality);
+            document.getElementById(`s${scenarioNum}ImpactScore`).innerHTML = formatScore(scores.stakeholder_impact);
+            document.getElementById(`s${scenarioNum}SystemsScore`).innerHTML = formatScore(scores.systems_awareness);
+
+            updateScoreCardStyling(scenarioNum, 'Values', scores.values_alignment);
+            updateScoreCardStyling(scenarioNum, 'Quality', scores.decision_quality);
+            updateScoreCardStyling(scenarioNum, 'Impact', scores.stakeholder_impact);
+            updateScoreCardStyling(scenarioNum, 'Systems', scores.systems_awareness);
+        }
+
+        function updateScoreCardStyling(scenarioNum, type, score) {
+            const card = document.getElementById(`s${scenarioNum}${type}Card`);
+            card.classList.remove('score-excellent', 'score-good', 'score-needs-improvement');
+            if (score >= 85) {
+                card.classList.add('score-excellent');
+            } else if (score >= 65) {
+                card.classList.add('score-good');
+            } else {
+                card.classList.add('score-needs-improvement');
+            }
+        }
+        
+        function generateFeedback(scenarioNum) {
+            const scores = {
+                values: Math.round(scenarioScores[scenarioNum].values_alignment),
+                quality: Math.round(scenarioScores[scenarioNum].decision_quality),
+                impact: Math.round(scenarioScores[scenarioNum].stakeholder_impact),
+                systems: Math.round(scenarioScores[scenarioNum].systems_awareness)
+            };
+            const avgScore = Math.round((scores.values + scores.quality + scores.impact + scores.systems) / 4);
             
-            document.getElementById(`s${scenarioNum}-feedback`).innerHTML = feedback;
+            let summary = '';
+            if (avgScore >= 85) {
+                summary = `<strong>Overall Performance: Excellent (${avgScore}/100)</strong><br>You consistently demonstrated outstanding judgment and ethical leadership, even under intense pressure. Your approach was balanced, thoughtful, and effective.`;
+            } else if (avgScore >= 65) {
+                summary = `<strong>Overall Performance: Strong (${avgScore}/100)</strong><br>You performed well in a challenging situation, showing solid decision-making and values awareness. There are opportunities to refine your approach for even better outcomes.`;
+            } else {
+                summary = `<strong>Overall Performance: Area for Development (${avgScore}/100)</strong><br>This scenario highlighted key areas for growth. High-pressure situations can be tough; focusing on grounding techniques and systematic thinking will bolster your leadership skills.`;
+            }
+
+            const getInsight = (score, dimension) => {
+                let text = '';
+                if (score >= 85) text = `<strong>Exceptional.</strong> Your focus on ${dimension} was a clear strength, guiding your actions effectively.`;
+                else if (score >= 65) text = `<strong>Solid.</strong> You showed good consideration for ${dimension}, forming a reliable foundation for your decisions.`;
+                else text = `<strong>Needs Focus.</strong> This is a key area for growth. Try to bring more conscious attention to ${dimension} in future high-stakes moments.`;
+                return text;
+            };
+
+            let dimensionalInsights = `
+                <ul style="list-style-type: none; padding-left: 0; margin-top: 15px;">
+                    <li style="margin-bottom: 10px;"><strong>Values Alignment (${scores.values}):</strong> ${getInsight(scores.values, 'core values')}</li>
+                    <li style="margin-bottom: 10px;"><strong>Decision Quality (${scores.quality}):</strong> ${getInsight(scores.quality, 'the quality and logic of your choices')}</li>
+                    <li style="margin-bottom: 10px;"><strong>Stakeholder Impact (${scores.impact}):</strong> ${getInsight(scores.impact, 'the impact of your decisions on all involved parties')}</li>
+                    <li style="margin-bottom: 10px;"><strong>Systems Awareness (${scores.systems}):</strong> ${getInsight(scores.systems, 'the broader, long-term consequences')}</li>
+                </ul>
+            `;
+
+            document.getElementById(`s${scenarioNum}Feedback`).innerHTML = summary + dimensionalInsights;
         }
 
         function restartScenario(scenarioNum) {
             currentPhase = 0;
-            userChoices = {};
-            scores = { values: 0, quality: 0, impact: 0, systems: 0 };
-            
-            clearInterval(timer);
+            userResponses = {};
+            clearInterval(timerInterval);
             clearInterval(coachingInterval);
             
-            document.getElementById(`s${scenarioNum}-intro`).classList.remove('hidden');
-            document.getElementById(`s${scenarioNum}-phases`).classList.add('hidden');
-            document.getElementById(`s${scenarioNum}-results`).classList.add('hidden');
+            document.querySelector(`#scenario${scenarioNum} .scenario-intro-card`).style.display = 'block';
+            document.getElementById(`scenario${scenarioNum}Phases`).style.display = 'none';
+            document.getElementById(`s${scenarioNum}Controls`).style.display = 'none';
+            document.getElementById(`s${scenarioNum}Results`).classList.remove('show');
+            document.getElementById('timerDisplay').classList.remove('active');
+            document.getElementById('activeCoaching').style.display = 'none';
             
-            updateStatusBar();
+            document.querySelectorAll(`#scenario${scenarioNum} .choice-option`).forEach(choice => choice.classList.remove('selected'));
+            document.querySelectorAll(`#scenario${scenarioNum} .values-item`).forEach(item => item.classList.remove('selected'));
+            
+            scenarioScores[scenarioNum] = { values_alignment: 0, decision_quality: 0, stakeholder_impact: 0, systems_awareness: 0 };
+            
+            const defaultScoreHTML = `<span>--</span><span class="scale"> / 100</span>`;
+            document.getElementById('valuesScore').innerHTML = defaultScoreHTML;
+            document.getElementById('decisionQuality').innerHTML = defaultScoreHTML;
+            document.getElementById('stakeholderImpact').innerHTML = defaultScoreHTML;
+            document.getElementById('systemsAwareness').innerHTML = defaultScoreHTML;
+            
+            document.getElementById('pressureFill').style.width = '0%';
+            
+            document.getElementById('progressIndicator').textContent = "Ready to begin scenarios";
+            document.getElementById('progressBar').style.width = '0%';
         }
 
-        // Initialize
-        updateStatusBar();
+        document.addEventListener('DOMContentLoaded', function() {
+            updatePressure();
+            const progressIndicator = document.getElementById('progressIndicator');
+            const progressBar = document.getElementById('progressBar');
+            if (progressIndicator) {
+                progressIndicator.textContent = "Ready to begin scenarios";
+            }
+            if (progressBar) {
+                progressBar.style.width = '0%';
+            }
+        });
     </script>
 </body>
 </html>
