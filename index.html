@@ -1045,6 +1045,52 @@
             margin: 5px;
         }
 
+        .calculating-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 5, 21, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 100;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .calculating-content h2 {
+            font-size: 22px;
+            margin-bottom: 10px;
+            color: #e8d5b7;
+        }
+
+        .calculating-content p {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-left-color: #2ecc71;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
         @media (max-width: 1024px) {
             .main-content {
                 grid-template-columns: 1fr;
@@ -1148,6 +1194,7 @@
                 </div>
             </aside>
             <main class="main-panel">
+                <!-- Introduction Tab -->
                 <div id="intro" class="tab-content active">
                     <div class="intro-content">
                         <div class="intro-hero">
@@ -1203,6 +1250,7 @@
                     </div>
                 </div>
 
+                <!-- Scenario 1: Crisis Resource Allocation -->
                 <div id="scenario1" class="tab-content scenario-content scenario1-content">
                     <div class="scenario-intro-card">
                         <h2 class="scenario-title">
@@ -1220,6 +1268,7 @@
                             Begin Decision Sequence →
                         </button>
                     </div>
+                    <!-- Scenario 1 Phases -->
                     <div id="scenario1Phases" style="display: none;">
                         <div class="decision-phase" id="s1phase1">
                             <div class="phase-header">
@@ -1475,6 +1524,7 @@
                     </div>
                 </div>
 
+                <!-- Scenario 2: Media Crisis Communication -->
                 <div id="scenario2" class="tab-content scenario-content scenario2-content">
                     <div class="scenario-intro-card">
                         <h2 class="scenario-title">
@@ -1705,6 +1755,7 @@
                     </div>
                 </div>
 
+                <!-- Scenario 3: Ethical Policy Conflict -->
                 <div id="scenario3" class="tab-content scenario-content scenario3-content">
                     <div class="scenario-intro-card">
                         <h2 class="scenario-title">
@@ -1942,6 +1993,16 @@
                     </div>
                 </div>
 
+                <!-- Calculating Results Overlay -->
+                <div id="calculatingResults" class="calculating-overlay" style="display: none;">
+                    <div class="calculating-content">
+                        <div class="spinner"></div>
+                        <h2>Calculating Your Performance...</h2>
+                        <p>Your detailed feedback is being prepared.</p>
+                    </div>
+                </div>
+
+                <!-- Timer Display -->
                 <div class="timer-display" id="timerDisplay">
                     <div class="timer-ring" id="timerRing"></div>
                     <div class="timer-value" id="timerValue">15</div>
@@ -2281,13 +2342,23 @@
         }
 
         function completeScenario() {
-            document.getElementById(`scenario${currentScenario}Phases`).style.display = 'none';
-            document.getElementById(`s${currentScenario}Controls`).style.display = 'none';
             document.getElementById('timerDisplay').classList.remove('active');
             clearInterval(coachingInterval);
-            document.getElementById(`s${currentScenario}Results`).classList.add('show');
-            updateFinalScoreDisplay(currentScenario);
-            generateFeedback(currentScenario);
+            document.getElementById('activeCoaching').style.display = 'none';
+
+            const calculatingOverlay = document.getElementById('calculatingResults');
+            calculatingOverlay.style.display = 'flex';
+
+            setTimeout(() => {
+                document.getElementById(`scenario${currentScenario}Phases`).style.display = 'none';
+                document.getElementById(`s${currentScenario}Controls`).style.display = 'none';
+
+                updateFinalScoreDisplay(currentScenario);
+                generateFeedback(currentScenario);
+
+                calculatingOverlay.style.display = 'none';
+                document.getElementById(`s${currentScenario}Results`).classList.add('show');
+            }, 1200);
         }
 
         function updateFinalScoreDisplay(scenarioNum) {
@@ -2361,6 +2432,7 @@
             clearInterval(timerInterval);
             clearInterval(coachingInterval);
             
+            document.getElementById('calculatingResults').style.display = 'none';
             document.querySelector(`#scenario${scenarioNum} .scenario-intro-card`).style.display = 'block';
             document.getElementById(`scenario${scenarioNum}Phases`).style.display = 'none';
             document.getElementById(`s${scenarioNum}Controls`).style.display = 'none';
