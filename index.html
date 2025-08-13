@@ -119,6 +119,16 @@
             background: rgba(231, 76, 60, 0.1);
         }
 
+        .tab-item.scenario2.active {
+            border-bottom-color: #3498db;
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .tab-item.scenario3.active {
+            border-bottom-color: #9b59b6;
+            background: rgba(155, 89, 182, 0.1);
+        }
+
         .status-bar {
             background: rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(15px);
@@ -383,7 +393,54 @@
 
         .scenario-content {
             position: relative;
+        }
+
+        .scenario1-content {
             border-left: 4px solid #e74c3c;
+        }
+
+        .scenario1-content .decision-phase {
+            border: 1px solid rgba(231, 76, 60, 0.15);
+        }
+
+        .scenario1-content .phase-header {
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.15), rgba(192, 57, 43, 0.1));
+        }
+
+        .scenario1-content .scenario-intro-card::before {
+            background: linear-gradient(90deg, #e74c3c, #c0392b, #e74c3c);
+        }
+
+        .scenario2-content {
+            border-left: 4px solid #3498db;
+        }
+
+        .scenario2-content .decision-phase {
+            border: 1px solid rgba(52, 152, 219, 0.15);
+        }
+
+        .scenario2-content .phase-header {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.15), rgba(41, 128, 185, 0.1));
+        }
+
+        .scenario2-content .scenario-intro-card::before {
+            background: linear-gradient(90deg, #3498db, #2980b9, #3498db);
+        }
+
+        .scenario3-content {
+            border-left: 4px solid #9b59b6;
+        }
+
+        .scenario3-content .decision-phase {
+            border: 1px solid rgba(155, 89, 182, 0.15);
+        }
+
+        .scenario3-content .phase-header {
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.15), rgba(142, 68, 173, 0.1));
+        }
+
+        .scenario3-content .scenario-intro-card::before {
+            background: linear-gradient(90deg, #9b59b6, #8e44ad, #9b59b6);
         }
 
         .scenario-intro-card {
@@ -403,7 +460,61 @@
             left: 0;
             width: 100%;
             height: 3px;
-            background: linear-gradient(90deg, #e74c3c, #c0392b, #e74c3c);
+        }
+
+        .multiple-choice-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .choice-option {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .choice-option::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, #2ecc71, #27ae60);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+            border-radius: 0 3px 3px 0;
+        }
+
+        .choice-option:hover::before,
+        .choice-option.selected::before {
+            transform: scaleY(1);
+        }
+
+        .choice-option:hover,
+        .choice-option.selected {
+            background: rgba(46, 204, 113, 0.08);
+            border-color: rgba(46, 204, 113, 0.3);
+            transform: translateX(4px);
+        }
+
+        .choice-text {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.5;
+        }
+
+        .choice-label {
+            font-weight: 600;
+            color: #e8d5b7;
+            margin-bottom: 6px;
+            font-size: 13px;
         }
 
         .scenario-title {
@@ -931,6 +1042,12 @@
             <div class="tab-item scenario1 disabled" onclick="showTab('scenario1')" id="scenario1Tab">
                 🚨 Crisis Resource Allocation
             </div>
+            <div class="tab-item scenario2 disabled" onclick="showTab('scenario2')" id="scenario2Tab">
+                📢 Media Crisis Communication
+            </div>
+            <div class="tab-item scenario3 disabled" onclick="showTab('scenario3')" id="scenario3Tab">
+                ⚖️ Ethical Policy Conflict
+            </div>
         </nav>
 
         <div class="status-bar">
@@ -938,6 +1055,499 @@
                 <div class="status-item">
                     <div id="valuesScore" class="status-value">--</div>
                     <div>Values Alignment</div>
+                <!-- Scenario 2: Media Crisis Communication -->
+                <div id="scenario2" class="tab-content scenario-content scenario2-content">
+                    <div class="scenario-intro-card">
+                        <h2 class="scenario-title">
+                            <span class="scenario-icon">📢</span>
+                            Media Crisis Communication
+                        </h2>
+                        <p class="scenario-description">
+                            A serious incident has occurred in your area of responsibility. Initial reports are conflicting, but media attention is intensifying rapidly. You have partial information from field teams, but key facts are still being verified. Stakeholders are demanding immediate public statements, and social media speculation is growing. Your next communication decisions will significantly impact public trust, team morale, and the effectiveness of ongoing response efforts.
+                        </p>
+                        <div class="scenario-stats">
+                            <span>⏱️ 4 phases • ~5 minutes total</span>
+                            <span>🎯 Focus: Crisis communication and stakeholder management</span>
+                            <span>💥 Pressure Level: Extreme</span>
+                        </div>
+                        <button class="btn btn-primary" onclick="startScenarioPhases(2)" style="margin-top: 20px;">
+                            Begin Decision Sequence →
+                        </button>
+                    </div>
+
+                    <div id="scenario2Phases" style="display: none;">
+                        <div class="decision-phase" id="s2phase1">
+                            <div class="phase-header">
+                                <div class="phase-title-row">
+                                    <h3 class="phase-title">Information Assessment</h3>
+                                    <div class="phase-timer" id="s2timer1">20s</div>
+                                </div>
+                                <p class="phase-description">Quickly assess what you know versus what you assume, and identify your communication values.</p>
+                            </div>
+                            <div class="phase-content">
+                                <div class="coaching-prompts">
+                                    <div class="prompt-title">Assessment Questions</div>
+                                    <ul class="prompt-list">
+                                        <li>What do I actually know versus assume?</li>
+                                        <li>What are the verification requirements?</li>
+                                        <li>What values should guide information sharing?</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="decision-input">
+                                    <label class="input-label">What is your primary information challenge?</label>
+                                    <div class="multiple-choice-options">
+                                        <div class="choice-option" onclick="selectChoice(this, 's2_info_challenge')" data-value="incomplete">
+                                            <div class="choice-label">Incomplete Information</div>
+                                            <div class="choice-text">Key facts are missing, but pressure to communicate is immediate and intense.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's2_info_challenge')" data-value="conflicting">
+                                            <div class="choice-label">Conflicting Reports</div>
+                                            <div class="choice-text">Different sources provide contradictory information about what happened.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's2_info_challenge')" data-value="speculation">
+                                            <div class="choice-label">Controlling Speculation</div>
+                                            <div class="choice-text">Rumors and misinformation are spreading faster than verified facts.</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="values-checklist">
+                                    <div class="values-item" onclick="toggleValue(this)" data-value="integrity">
+                                        <div class="values-name">Integrity</div>
+                                        <div class="values-desc">Honest communication</div>
+                                    </div>
+                                    <div class="values-item" onclick="toggleValue(this)" data-value="transparency">
+                                        <div class="values-name">Transparency</div>
+                                        <div class="values-desc">Open information sharing</div>
+                                    </div>
+                                    <div class="values-item" onclick="toggleValue(this)" data-value="safety">
+                                        <div class="values-name">Safety</div>
+                                        <div class="values-desc">Protect public welfare</div>
+                                    </div>
+                                    <div class="values-item" onclick="toggleValue(this)" data-value="accountability">
+                                        <div class="values-name">Accountability</div>
+                                        <div class="values-desc">Take responsibility</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="decision-phase" id="s2phase2">
+                            <div class="phase-header">
+                                <div class="phase-title-row">
+                                    <h3 class="phase-title">Stakeholder Prioritization</h3>
+                                    <div class="phase-timer" id="s2timer2">45s</div>
+                                </div>
+                                <p class="phase-description">Identify all affected stakeholders and their legitimate communication needs.</p>
+                            </div>
+                            <div class="phase-content">
+                                <div class="coaching-prompts">
+                                    <div class="prompt-title">Stakeholder Analysis</div>
+                                    <ul class="prompt-list">
+                                        <li>Who are all affected stakeholders?</li>
+                                        <li>What are their legitimate information needs?</li>
+                                        <li>How do relationships factor into communication?</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="decision-input">
+                                    <label class="input-label">Which stakeholders should receive priority communication?</label>
+                                    <div class="multiple-choice-options">
+                                        <div class="choice-option" onclick="selectChoice(this, 's2_stakeholders')" data-value="affected">
+                                            <div class="choice-label">Directly Affected Parties</div>
+                                            <div class="choice-text">Those directly impacted by the incident deserve immediate, accurate information.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's2_stakeholders')" data-value="response">
+                                            <div class="choice-label">Response Teams</div>
+                                            <div class="choice-text">Field teams and partner agencies need clear information to coordinate effectively.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's2_stakeholders')" data-value="public">
+                                            <div class="choice-label">General Public</div>
+                                            <div class="choice-text">Community-wide transparency helps maintain trust and prevent panic.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's2_stakeholders')" data-value="leadership">
+                                            <div class="choice-label">Organizational Leadership</div>
+                                            <div class="choice-text">Senior leadership and oversight bodies need immediate briefings.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="decision-phase" id="s2phase3">
+                            <div class="phase-header">
+                                <div class="phase-title-row">
+                                    <h3 class="phase-title">Message Development</h3>
+                                    <div class="phase-timer" id="s2timer3">75s</div>
+                                </div>
+                                <p class="phase-description">Craft your core message balancing transparency with security and accuracy.</p>
+                            </div>
+                            <div class="phase-content">
+                                <div class="coaching-prompts">
+                                    <div class="prompt-title">Message Strategy</div>
+                                    <ul class="prompt-list">
+                                        <li>What must be communicated for safety?</li>
+                                        <li>How do I balance transparency with security?</li>
+                                        <li>What tone honors both urgency and respect?</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="decision-input">
+                                    <label class="input-label">What is your primary message approach?</label>
+                                    <div class="multiple-choice-options">
+                                        <div class="choice-option" onclick="selectChoice(this, 's2_message')" data-value="facts_only">
+                                            <div class="choice-label">Facts-Only Approach</div>
+                                            <div class="choice-text">"Here's what we know for certain. We'll provide updates as more information is verified."</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's2_message')" data-value="context">
+                                            <div class="choice-label">Context & Process</div>
+                                            <div class="choice-text">"This is what happened, why we're responding this way, and how we'll keep you informed."</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's2_message')" data-value="transparency">
+                                            <div class="choice-label">Full Transparency</div>
+                                            <div class="choice-text">"Here's everything we know, what we're still investigating, and what questions remain."</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="decision-phase" id="s2phase4">
+                            <div class="phase-header">
+                                <div class="phase-title-row">
+                                    <h3 class="phase-title">Communication Execution</h3>
+                                    <div class="phase-timer" id="s2timer4">25s</div>
+                                </div>
+                                <p class="phase-description">Choose your communication channels and timing strategy.</p>
+                            </div>
+                            <div class="phase-content">
+                                <div class="coaching-prompts">
+                                    <div class="prompt-title">Execution Strategy</div>
+                                    <ul class="prompt-list">
+                                        <li>What channels reach key audiences?</li>
+                                        <li>How do I sequence information release?</li>
+                                        <li>What follow-up commitment am I making?</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="decision-input">
+                                    <label class="input-label">Your communication execution plan</label>
+                                    <div class="multiple-choice-options">
+                                        <div class="choice-option" onclick="selectChoice(this, 's2_execution')" data-value="immediate">
+                                            <div class="choice-label">Immediate Public Statement</div>
+                                            <div class="choice-text">Issue comprehensive public statement now across all channels with commitment to updates.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's2_execution')" data-value="staged">
+                                            <div class="choice-label">Staged Communication</div>
+                                            <div class="choice-text">Brief key stakeholders first, then coordinated public release with consistent messaging.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's2_execution')" data-value="responsive">
+                                            <div class="choice-label">Responsive Approach</div>
+                                            <div class="choice-text">Establish regular communication schedule with proactive updates as information develops.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="phase-controls" id="s2Controls" style="display: none;">
+                            <button class="btn btn-secondary" onclick="previousPhase()" id="s2PrevBtn">← Previous</button>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="btn btn-secondary" onclick="pauseTimer()" id="s2PauseBtn">⏸️ Pause</button>
+                                <button class="btn btn-primary" onclick="nextPhase()" id="s2NextBtn" disabled>Continue →</button>
+                            </div>
+                        </div>
+
+                        <div class="results-panel" id="s2Results">
+                            <div class="results-header">
+                                <h2 class="results-title">Scenario Complete!</h2>
+                                <p class="results-subtitle">Media Crisis Communication - Communication under extreme pressure</p>
+                            </div>
+
+                            <div class="scores-grid">
+                                <div class="score-card" id="s2ValuesCard">
+                                    <div class="score-value" id="s2ValuesScore">--</div>
+                                    <div class="score-label">Values Alignment</div>
+                                </div>
+                                <div class="score-card" id="s2QualityCard">
+                                    <div class="score-value" id="s2QualityScore">--</div>
+                                    <div class="score-label">Decision Quality</div>
+                                </div>
+                                <div class="score-card" id="s2ImpactCard">
+                                    <div class="score-value" id="s2ImpactScore">--</div>
+                                    <div class="score-label">Stakeholder Impact</div>
+                                </div>
+                                <div class="score-card" id="s2SystemsCard">
+                                    <div class="score-value" id="s2SystemsScore">--</div>
+                                    <div class="score-label">Systems Awareness</div>
+                                </div>
+                            </div>
+
+                            <div class="feedback-section">
+                                <h3 class="feedback-title">🎯 Performance Insights</h3>
+                                <div class="feedback-content" id="s2Feedback">
+                                    Your personalized feedback will appear here...
+                                </div>
+                            </div>
+
+                            <div style="text-align: center; margin-top: 25px;">
+                                <button class="btn btn-primary" onclick="showTab('scenario3')" style="margin-right: 12px;">Next Scenario →</button>
+                                <button class="btn btn-secondary" onclick="restartScenario(2)">🔄 Try Again</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scenario 3: Ethical Policy Conflict -->
+                <div id="scenario3" class="tab-content scenario-content scenario3-content">
+                    <div class="scenario-intro-card">
+                        <h2 class="scenario-title">
+                            <span class="scenario-icon">⚖️</span>
+                            Ethical Policy Conflict
+                        </h2>
+                        <p class="scenario-description">
+                            Your organization has been directed to implement a new policy that conflicts with established community practices and values. The policy comes from senior leadership with clear expectations for compliance, but early community feedback reveals significant ethical concerns and potential negative impacts on vulnerable populations. Team members are divided - some support strict compliance, others advocate for community concerns. You must decide how to navigate this values conflict while maintaining your responsibilities to both leadership and community.
+                        </p>
+                        <div class="scenario-stats">
+                            <span>⏱️ 4 phases • ~6 minutes total</span>
+                            <span>🎯 Focus: Ethical decision-making and stakeholder balance</span>
+                            <span>💥 Pressure Level: Maximum</span>
+                        </div>
+                        <button class="btn btn-primary" onclick="startScenarioPhases(3)" style="margin-top: 20px;">
+                            Begin Decision Sequence →
+                        </button>
+                    </div>
+
+                    <div id="scenario3Phases" style="display: none;">
+                        <div class="decision-phase" id="s3phase1">
+                            <div class="phase-header">
+                                <div class="phase-title-row">
+                                    <h3 class="phase-title">Values Conflict Analysis</h3>
+                                    <div class="phase-timer" id="s3timer1">30s</div>
+                                </div>
+                                <p class="phase-description">Identify what values are in tension and where creative solutions might exist.</p>
+                            </div>
+                            <div class="phase-content">
+                                <div class="coaching-prompts">
+                                    <div class="prompt-title">Conflict Analysis</div>
+                                    <ul class="prompt-list">
+                                        <li>What values are creating tension?</li>
+                                        <li>What are the non-negotiable principles?</li>
+                                        <li>Where might creative solutions exist?</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="decision-input">
+                                    <label class="input-label">What is the core values conflict you're facing?</label>
+                                    <div class="multiple-choice-options">
+                                        <div class="choice-option" onclick="selectChoice(this, 's3_conflict')" data-value="compliance_community">
+                                            <div class="choice-label">Compliance vs. Community Impact</div>
+                                            <div class="choice-text">Organizational expectations conflict with potential harm to vulnerable community members.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's3_conflict')" data-value="loyalty_integrity">
+                                            <div class="choice-label">Loyalty vs. Integrity</div>
+                                            <div class="choice-text">Being a team player conflicts with speaking truth about policy concerns.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's3_conflict')" data-value="efficiency_equity">
+                                            <div class="choice-label">Efficiency vs. Equity</div>
+                                            <div class="choice-text">Streamlined implementation conflicts with ensuring fair outcomes for all populations.</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="values-checklist">
+                                    <div class="values-item" onclick="toggleValue(this)" data-value="integrity">
+                                        <div class="values-name">Integrity</div>
+                                        <div class="values-desc">Honest communication</div>
+                                    </div>
+                                    <div class="values-item" onclick="toggleValue(this)" data-value="service">
+                                        <div class="values-name">Service</div>
+                                        <div class="values-desc">Community welfare</div>
+                                    </div>
+                                    <div class="values-item" onclick="toggleValue(this)" data-value="accountability">
+                                        <div class="values-name">Accountability</div>
+                                        <div class="values-desc">Take responsibility</div>
+                                    </div>
+                                    <div class="values-item" onclick="toggleValue(this)" data-value="excellence">
+                                        <div class="values-name">Excellence</div>
+                                        <div class="values-desc">High standards</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="decision-phase" id="s3phase2">
+                            <div class="phase-header">
+                                <div class="phase-title-row">
+                                    <h3 class="phase-title">Impact Assessment</h3>
+                                    <div class="phase-timer" id="s3timer2">60s</div>
+                                </div>
+                                <p class="phase-description">Analyze who benefits and who bears costs across different implementation approaches.</p>
+                            </div>
+                            <div class="phase-content">
+                                <div class="coaching-prompts">
+                                    <div class="prompt-title">Impact Analysis</div>
+                                    <ul class="prompt-list">
+                                        <li>Who benefits and who bears costs?</li>
+                                        <li>What are unintended consequences?</li>
+                                        <li>How do power dynamics affect implementation?</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="decision-input">
+                                    <label class="input-label">Which impact concerns you most about the current policy direction?</label>
+                                    <div class="multiple-choice-options">
+                                        <div class="choice-option" onclick="selectChoice(this, 's3_impact')" data-value="vulnerable">
+                                            <div class="choice-label">Vulnerable Population Effects</div>
+                                            <div class="choice-text">The policy may disproportionately harm those with the least voice and fewest resources.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's3_impact')" data-value="trust">
+                                            <div class="choice-label">Community Trust Erosion</div>
+                                            <div class="choice-text">Implementation without addressing concerns could damage long-term community relationships.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's3_impact')" data-value="team_morale">
+                                            <div class="choice-label">Team Cohesion</div>
+                                            <div class="choice-text">The internal conflict is affecting team effectiveness and shared commitment.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's3_impact')" data-value="precedent">
+                                            <div class="choice-label">Organizational Precedent</div>
+                                            <div class="choice-text">How this is handled sets expectations for future policy conflicts and ethical decisions.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="decision-phase" id="s3phase3">
+                            <div class="phase-header">
+                                <div class="phase-title-row">
+                                    <h3 class="phase-title">Solution Development</h3>
+                                    <div class="phase-timer" id="s3timer3">90s</div>
+                                </div>
+                                <p class="phase-description">Generate approaches that honor both organizational requirements and ethical concerns.</p>
+                            </div>
+                            <div class="phase-content">
+                                <div class="coaching-prompts">
+                                    <div class="prompt-title">Creative Solutions</div>
+                                    <ul class="prompt-list">
+                                        <li>What approaches honor both mandates and community?</li>
+                                        <li>How can I advocate effectively within constraints?</li>
+                                        <li>What partnerships could create better outcomes?</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="decision-input">
+                                    <label class="input-label">What is your primary strategy for addressing this conflict?</label>
+                                    <div class="multiple-choice-options">
+                                        <div class="choice-option" onclick="selectChoice(this, 's3_strategy')" data-value="advocate_up">
+                                            <div class="choice-label">Upward Advocacy</div>
+                                            <div class="choice-text">Present community concerns to leadership with specific recommendations for policy modifications.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's3_strategy')" data-value="pilot">
+                                            <div class="choice-label">Pilot Implementation</div>
+                                            <div class="choice-text">Propose a limited pilot program to test approaches and gather data before full implementation.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's3_strategy')" data-value="enhanced">
+                                            <div class="choice-label">Enhanced Implementation</div>
+                                            <div class="choice-text">Implement the policy with additional safeguards and support systems to address ethical concerns.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's3_strategy')" data-value="stakeholder">
+                                            <div class="choice-label">Stakeholder Engagement</div>
+                                            <div class="choice-text">Create structured dialogue between leadership, community, and implementation team to find solutions.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="decision-phase" id="s3phase4">
+                            <div class="phase-header">
+                                <div class="phase-title-row">
+                                    <h3 class="phase-title">Decision Implementation</h3>
+                                    <div class="phase-timer" id="s3timer4">35s</div>
+                                </div>
+                                <p class="phase-description">Commit to your approach and plan for authentic communication about your decision.</p>
+                            </div>
+                            <div class="phase-content">
+                                <div class="coaching-prompts">
+                                    <div class="prompt-title">Implementation Planning</div>
+                                    <ul class="prompt-list">
+                                        <li>How do I explain this decision authentically?</li>
+                                        <li>What commitments am I making for ongoing adjustment?</li>
+                                        <li>How will I measure success against values?</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="decision-input">
+                                    <label class="input-label">Your final approach and commitment to stakeholders</label>
+                                    <div class="multiple-choice-options">
+                                        <div class="choice-option" onclick="selectChoice(this, 's3_final')" data-value="transparent">
+                                            <div class="choice-label">Transparent Process</div>
+                                            <div class="choice-text">"I'm implementing this with modifications based on your concerns, and here's how we'll monitor impact."</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's3_final')" data-value="accountable">
+                                            <div class="choice-label">Accountable Implementation</div>
+                                            <div class="choice-text">"I take responsibility for making this work ethically, with regular check-ins and adjustment processes."</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's3_final')" data-value="collaborative">
+                                            <div class="choice-label">Ongoing Collaboration</div>
+                                            <div class="choice-text">"This decision reflects our shared values. I need your continued partnership to ensure it serves everyone."</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 's3_final')" data-value="adaptive">
+                                            <div class="choice-label">Adaptive Approach</div>
+                                            <div class="choice-text">"We'll start with this approach and adjust based on what we learn about real impacts."</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="phase-controls" id="s3Controls" style="display: none;">
+                            <button class="btn btn-secondary" onclick="previousPhase()" id="s3PrevBtn">← Previous</button>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="btn btn-secondary" onclick="pauseTimer()" id="s3PauseBtn">⏸️ Pause</button>
+                                <button class="btn btn-primary" onclick="nextPhase()" id="s3NextBtn" disabled>Continue →</button>
+                            </div>
+                        </div>
+
+                        <div class="results-panel" id="s3Results">
+                            <div class="results-header">
+                                <h2 class="results-title">All Scenarios Complete!</h2>
+                                <p class="results-subtitle">Ethical Policy Conflict - Values alignment under maximum pressure</p>
+                            </div>
+
+                            <div class="scores-grid">
+                                <div class="score-card" id="s3ValuesCard">
+                                    <div class="score-value" id="s3ValuesScore">--</div>
+                                    <div class="score-label">Values Alignment</div>
+                                </div>
+                                <div class="score-card" id="s3QualityCard">
+                                    <div class="score-value" id="s3QualityScore">--</div>
+                                    <div class="score-label">Decision Quality</div>
+                                </div>
+                                <div class="score-card" id="s3ImpactCard">
+                                    <div class="score-value" id="s3ImpactScore">--</div>
+                                    <div class="score-label">Stakeholder Impact</div>
+                                </div>
+                                <div class="score-card" id="s3SystemsCard">
+                                    <div class="score-value" id="s3SystemsScore">--</div>
+                                    <div class="score-label">Systems Awareness</div>
+                                </div>
+                            </div>
+
+                            <div class="feedback-section">
+                                <h3 class="feedback-title">🎯 Performance Insights</h3>
+                                <div class="feedback-content" id="s3Feedback">
+                                    Your personalized feedback will appear here...
+                                </div>
+                            </div>
+
+                            <div style="text-align: center; margin-top: 25px;">
+                                <button class="btn btn-secondary" onclick="restartScenario(3)">🔄 Try Again</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="status-item">
                     <div id="decisionQuality" class="status-value">--</div>
@@ -1112,7 +1722,24 @@
                                 
                                 <div class="decision-input">
                                     <label class="input-label">What is the core challenge you're facing?</label>
-                                    <textarea class="decision-textarea" placeholder="Describe the primary challenge in your own words..." oninput="checkCompletion()"></textarea>
+                                    <div class="multiple-choice-options">
+                                        <div class="choice-option" onclick="selectChoice(this, 'challenge')" data-value="coordination">
+                                            <div class="choice-label">Coordination Breakdown</div>
+                                            <div class="choice-text">The primary issue is communication and coordination failures between agencies that led to the shipment problem.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 'challenge')" data-value="accountability">
+                                            <div class="choice-label">Accountability Crisis</div>
+                                            <div class="choice-text">The core challenge is determining responsibility and ensuring this type of failure doesn't happen again.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 'challenge')" data-value="trust">
+                                            <div class="choice-label">Team Trust & Morale</div>
+                                            <div class="choice-text">The main challenge is rebuilding team confidence and trust while maintaining operational effectiveness.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 'challenge')" data-value="systems">
+                                            <div class="choice-label">System Resilience</div>
+                                            <div class="choice-text">This reveals deeper systemic vulnerabilities that need to be addressed to prevent cascading failures.</div>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="values-checklist">
@@ -1156,12 +1783,42 @@
                                 
                                 <div class="decision-input">
                                     <label class="input-label">What values will guide your decision-making?</label>
-                                    <textarea class="decision-textarea" placeholder="Identify the 2-3 most important values for this situation..." oninput="checkCompletion()"></textarea>
+                                    <div class="multiple-choice-options">
+                                        <div class="choice-option" onclick="selectChoice(this, 'values1')" data-value="safety_service">
+                                            <div class="choice-label">Safety & Service First</div>
+                                            <div class="choice-text">Prioritize community safety and public service above all other considerations, even if it means difficult conversations.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 'values1')" data-value="integrity_accountability">
+                                            <div class="choice-label">Integrity & Accountability</div>
+                                            <div class="choice-text">Focus on honest communication and clear accountability to rebuild trust and prevent future issues.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 'values1')" data-value="collaboration_excellence">
+                                            <div class="choice-label">Collaboration & Excellence</div>
+                                            <div class="choice-text">Emphasize teamwork and continuous improvement to turn this setback into a learning opportunity.</div>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="decision-input">
                                     <label class="input-label">What are the real stakes beyond immediate pressure?</label>
-                                    <textarea class="decision-textarea" placeholder="Consider long-term impacts on relationships, trust, and future capability..." oninput="checkCompletion()"></textarea>
+                                    <div class="multiple-choice-options">
+                                        <div class="choice-option" onclick="selectChoice(this, 'stakes')" data-value="operational">
+                                            <div class="choice-label">Operational Effectiveness</div>
+                                            <div class="choice-text">Future coordination capacity and the ability to respond effectively to similar situations.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 'stakes')" data-value="relationships">
+                                            <div class="choice-label">Stakeholder Relationships</div>
+                                            <div class="choice-text">Trust with team members, partner agencies, and the communities we serve.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 'stakes')" data-value="culture">
+                                            <div class="choice-label">Organizational Culture</div>
+                                            <div class="choice-text">Whether we become more resilient and adaptive or more risk-averse and bureaucratic.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 'stakes')" data-value="credibility">
+                                            <div class="choice-label">Leadership Credibility</div>
+                                            <div class="choice-text">My ability to lead effectively in future crises and maintain team confidence.</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1185,18 +1842,39 @@
                                 </div>
                                 
                                 <div class="decision-input">
-                                    <label class="input-label">Technical Response: Investigate breakdown immediately, reassign responsibilities, re-emphasize protocol adherence</label>
-                                    <textarea class="decision-textarea" placeholder="How would you implement this approach while maintaining your values?" oninput="checkCompletion()"></textarea>
+                                    <label class="input-label">Choose your primary approach to address the situation:</label>
+                                    <div class="multiple-choice-options">
+                                        <div class="choice-option" onclick="selectChoice(this, 'approach')" data-value="technical">
+                                            <div class="choice-label">Technical Response</div>
+                                            <div class="choice-text">Immediately investigate the breakdown, reassign responsibilities, and reinforce protocol adherence to prevent recurrence.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 'approach')" data-value="mixed">
+                                            <div class="choice-label">Mixed Approach</div>
+                                            <div class="choice-text">Conduct a quick debrief to clarify what went wrong, reinforce protocols, and ask for staff input on necessary adaptations.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 'approach')" data-value="adaptive">
+                                            <div class="choice-label">Adaptive Response</div>
+                                            <div class="choice-text">Use the missed delivery as a case study to explore deeper system gaps and communication breakdowns with the team.</div>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="decision-input">
-                                    <label class="input-label">Mixed Approach: Quick debrief to clarify what went wrong, reinforce protocols, ask for staff input on adaptations</label>
-                                    <textarea class="decision-textarea" placeholder="How would you balance immediate fixes with team input?" oninput="checkCompletion()"></textarea>
-                                </div>
-
-                                <div class="decision-input">
-                                    <label class="input-label">Adaptive Response: Use missed delivery as case study to explore deeper system gaps and communication breakdowns</label>
-                                    <textarea class="decision-textarea" placeholder="How would you facilitate this learning-focused approach?" oninput="checkCompletion()"></textarea>
+                                    <label class="input-label">How will you implement your chosen approach while maintaining values?</label>
+                                    <div class="multiple-choice-options">
+                                        <div class="choice-option" onclick="selectChoice(this, 'implementation')" data-value="transparent">
+                                            <div class="choice-label">Transparent Process</div>
+                                            <div class="choice-text">Share findings openly with all stakeholders and involve them in developing solutions.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 'implementation')" data-value="supportive">
+                                            <div class="choice-label">Supportive Approach</div>
+                                            <div class="choice-text">Focus on learning rather than blame, providing additional training and resources where needed.</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 'implementation')" data-value="systematic">
+                                            <div class="choice-label">Systematic Review</div>
+                                            <div class="choice-text">Establish clear timelines and check-in points to ensure systematic follow-through on improvements.</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1220,8 +1898,25 @@
                                 </div>
                                 
                                 <div class="decision-input">
-                                    <label class="input-label">Your final decision and values-based rationale</label>
-                                    <textarea class="decision-textarea" placeholder="State your chosen approach and explain how it honors your core values..." oninput="checkCompletion()"></textarea>
+                                    <label class="input-label">Your final decision and communication approach</label>
+                                    <div class="multiple-choice-options">
+                                        <div class="choice-option" onclick="selectChoice(this, 'final_decision')" data-value="direct">
+                                            <div class="choice-label">Direct & Decisive</div>
+                                            <div class="choice-text">"We've identified the breakdown and are implementing immediate fixes. Here's what each team needs to do going forward."</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 'final_decision')" data-value="collaborative">
+                                            <div class="choice-label">Collaborative & Inclusive</div>
+                                            <div class="choice-text">"Let's work together to understand what happened and build better systems. I need your insights and commitment."</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 'final_decision')" data-value="learning">
+                                            <div class="choice-label">Learning-Focused</div>
+                                            <div class="choice-text">"This situation reveals important lessons. Let's use it to strengthen our capabilities and prevent future issues."</div>
+                                        </div>
+                                        <div class="choice-option" onclick="selectChoice(this, 'final_decision')" data-value="values_based">
+                                            <div class="choice-label">Values-Driven</div>
+                                            <div class="choice-text">"Our commitment to safety and service means we must address this thoroughly while supporting our team's growth."</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1336,6 +2031,96 @@
                             "What implementation support do I need?",
                             "What would I tell my team about why I chose this approach?",
                             "How does this decision align with my core values?"
+                        ]
+                    }
+                ]
+            },
+            2: {
+                title: "Media Crisis Communication",
+                phases: [
+                    { 
+                        time: 20, 
+                        prompts: [
+                            "What do I actually know versus assume?",
+                            "What are the verification requirements?",
+                            "What values guide information sharing?",
+                            "How quickly does accurate information need to flow?",
+                            "What's the cost of waiting versus acting now?"
+                        ]
+                    },
+                    { 
+                        time: 45, 
+                        prompts: [
+                            "Who are all affected stakeholders?",
+                            "What are their legitimate information needs?",
+                            "How do relationships factor into communication?",
+                            "Which voices am I prioritizing and why?",
+                            "What power dynamics affect information access?"
+                        ]
+                    },
+                    { 
+                        time: 75, 
+                        prompts: [
+                            "What must be communicated for safety?",
+                            "How do I balance transparency with security?",
+                            "What tone honors both urgency and respect?",
+                            "How do I prevent misinformation while being honest?",
+                            "What message will build rather than erode trust?"
+                        ]
+                    },
+                    { 
+                        time: 25, 
+                        prompts: [
+                            "What channels reach key audiences most effectively?",
+                            "How do I sequence information release?",
+                            "What follow-up commitment am I making?",
+                            "How will I handle follow-up questions?",
+                            "What does accountability look like here?"
+                        ]
+                    }
+                ]
+            },
+            3: {
+                title: "Ethical Policy Conflict",
+                phases: [
+                    { 
+                        time: 30, 
+                        prompts: [
+                            "What values are creating tension in this situation?",
+                            "What are the non-negotiable principles I must maintain?",
+                            "Where might creative solutions honor multiple perspectives?",
+                            "What would happen if I ignore one side of this conflict?",
+                            "How do I stay true to my deepest leadership values?"
+                        ]
+                    },
+                    { 
+                        time: 60, 
+                        prompts: [
+                            "Who benefits and who bears costs from different approaches?",
+                            "What are the unintended consequences I need to consider?",
+                            "How do power dynamics affect implementation success?",
+                            "What voices might be missing from this conversation?",
+                            "How does this decision affect future organizational culture?"
+                        ]
+                    },
+                    { 
+                        time: 90, 
+                        prompts: [
+                            "What approaches honor both organizational requirements and community needs?",
+                            "How can I advocate effectively within my constraints?",
+                            "What partnerships could create better outcomes for everyone?",
+                            "What would courage look like in this situation?",
+                            "How do I turn this conflict into an opportunity for growth?"
+                        ]
+                    },
+                    { 
+                        time: 35, 
+                        prompts: [
+                            "How do I explain this decision authentically to all stakeholders?",
+                            "What commitments am I making for ongoing adjustment?",
+                            "How will I measure success against my core values?",
+                            "What support do I need to implement this ethically?",
+                            "How does this decision reflect who I want to be as a leader?"
                         ]
                     }
                 ]
@@ -1554,12 +2339,21 @@
             const currentPhaseElement = document.querySelector(`#scenario${currentScenario}Phases .decision-phase.active`);
             if (!currentPhaseElement) return;
             
-            // Collect textarea responses
-            const textareas = currentPhaseElement.querySelectorAll('textarea');
-            const responses = {};
-            textareas.forEach((textarea, index) => {
-                const label = textarea.previousElementSibling?.textContent || `input_${index}`;
-                responses[label] = textarea.value.trim();
+            // Collect choice selections
+            const choiceSelections = {};
+            const selectedChoices = currentPhaseElement.querySelectorAll('.choice-option.selected');
+            selectedChoices.forEach(choice => {
+                // Extract group name from onclick attribute
+                const onclickAttr = choice.getAttribute('onclick');
+                const groupMatch = onclickAttr.match(/selectChoice\(this,\s*['"]([^'"]+)['"]\)/);
+                if (groupMatch) {
+                    const groupName = groupMatch[1];
+                    choiceSelections[groupName] = {
+                        value: choice.dataset.value,
+                        label: choice.querySelector('.choice-label')?.textContent || '',
+                        text: choice.querySelector('.choice-text')?.textContent || ''
+                    };
+                }
             });
             
             // Collect selected values
@@ -1569,7 +2363,7 @@
             const phaseData = {
                 phase: currentPhase,
                 timeRemaining: currentTimer,
-                responses: responses,
+                choiceSelections: choiceSelections,
                 selectedValues: selectedValues,
                 totalTime: scenarios[currentScenario].phases[currentPhase].time
             };
@@ -1590,23 +2384,45 @@
             
             // Score based on engagement and timing
             const timeScore = Math.min(1.0, (phaseData.totalTime - phaseData.timeRemaining) / phaseData.totalTime);
-            const responses = Object.values(phaseData.responses).filter(r => r.length > 0);
-            const responseQuality = responses.reduce((total, response) => {
-                return total + Math.min(1.0, response.length / 50);
-            }, 0) / Math.max(1, responses.length);
+            const choicesCount = Object.keys(phaseData.choiceSelections).length;
+            const choiceQuality = choicesCount > 0 ? 1.0 : 0.0; // Full score for making choices
             
             const valuesEngagement = phaseData.selectedValues ? Math.min(1.0, phaseData.selectedValues.length * 0.25) : 0;
             
             // Calculate phase contribution (each phase worth 25 points max)
-            const baseScore = Math.round(25 * (responseQuality * 0.6 + timeScore * 0.2 + valuesEngagement * 0.2));
+            const baseScore = Math.round(25 * (choiceQuality * 0.7 + timeScore * 0.2 + valuesEngagement * 0.1));
             
-            // Add to cumulative scores with some variation
-            scenarioScores[currentScenario].values_alignment += Math.round(baseScore * 1.1);
-            scenarioScores[currentScenario].decision_quality += Math.round(baseScore * 0.9);
-            scenarioScores[currentScenario].stakeholder_impact += Math.round(baseScore * 0.8);
-            scenarioScores[currentScenario].systems_awareness += Math.round(baseScore * 0.7);
+            // Add to cumulative scores with some variation based on choice types
+            const choiceBonus = getChoiceBonus(phaseData.choiceSelections);
+            
+            scenarioScores[currentScenario].values_alignment += Math.round(baseScore * (1.1 + choiceBonus.values));
+            scenarioScores[currentScenario].decision_quality += Math.round(baseScore * (0.9 + choiceBonus.quality));
+            scenarioScores[currentScenario].stakeholder_impact += Math.round(baseScore * (0.8 + choiceBonus.stakeholder));
+            scenarioScores[currentScenario].systems_awareness += Math.round(baseScore * (0.7 + choiceBonus.systems));
             
             updateStatusBar(currentScenario);
+        }
+
+        function getChoiceBonus(choiceSelections) {
+            let values = 0, quality = 0, stakeholder = 0, systems = 0;
+            
+            Object.values(choiceSelections).forEach(choice => {
+                // Give bonuses based on choice values that align with different dimensions
+                if (choice.value.includes('integrity') || choice.value.includes('accountability') || choice.value.includes('values')) {
+                    values += 0.1;
+                }
+                if (choice.value.includes('systematic') || choice.value.includes('quality') || choice.value.includes('excellence')) {
+                    quality += 0.1;
+                }
+                if (choice.value.includes('stakeholder') || choice.value.includes('community') || choice.value.includes('collaboration')) {
+                    stakeholder += 0.1;
+                }
+                if (choice.value.includes('systems') || choice.value.includes('adaptive') || choice.value.includes('holistic')) {
+                    systems += 0.1;
+                }
+            });
+            
+            return { values, quality, stakeholder, systems };
         }
 
         function updateStatusBar(scenarioNum) {
@@ -1625,29 +2441,46 @@
             document.getElementById('pressureFill').style.width = pressureLevel + '%';
         }
 
+        function selectChoice(element, groupName) {
+            // Remove selection from other options in the same group
+            const currentPhaseElement = document.querySelector(`#scenario${currentScenario}Phases .decision-phase.active`);
+            if (currentPhaseElement) {
+                const groupOptions = currentPhaseElement.querySelectorAll(`[onclick*="${groupName}"]`);
+                groupOptions.forEach(option => {
+                    if (option !== element) {
+                        option.classList.remove('selected');
+                    }
+                });
+            }
+            
+            // Toggle selection on clicked element
+            element.classList.toggle('selected');
+            checkCompletion();
+        }
+
         function toggleValue(element) {
             element.classList.toggle('selected');
             checkCompletion();
         }
 
         function checkCompletion() {
-            // Enable next button based on input
+            // Enable next button based on multiple choice selections
             if (currentScenario === 0) return;
             
             const currentPhaseElement = document.querySelector(`#scenario${currentScenario}Phases .decision-phase.active`);
             if (currentPhaseElement) {
-                const textareas = currentPhaseElement.querySelectorAll('textarea');
+                const choiceOptions = currentPhaseElement.querySelectorAll('.choice-option.selected');
                 const selectedValues = currentPhaseElement.querySelectorAll('.values-item.selected');
                 
-                // For phase 1 (ground and center), require both text input and values selection
+                // For phase 1, require both choice selection and values selection
                 if (currentPhase === 0) {
-                    const hasInput = Array.from(textareas).some(ta => ta.value.trim().length > 10);
+                    const hasChoice = choiceOptions.length > 0;
                     const hasValues = selectedValues.length > 0;
-                    document.getElementById(`s${currentScenario}NextBtn`).disabled = !(hasInput && hasValues);
+                    document.getElementById(`s${currentScenario}NextBtn`).disabled = !(hasChoice && hasValues);
                 } else {
-                    // For other phases, just require meaningful text input
-                    const hasInput = Array.from(textareas).some(ta => ta.value.trim().length > 20);
-                    document.getElementById(`s${currentScenario}NextBtn`).disabled = !hasInput;
+                    // For other phases, just require at least one choice selection
+                    const hasChoices = choiceOptions.length > 0;
+                    document.getElementById(`s${currentScenario}NextBtn`).disabled = !hasChoices;
                 }
             }
         }
@@ -1734,8 +2567,8 @@
             document.getElementById('timerDisplay').classList.remove('active');
             document.getElementById('activeCoaching').style.display = 'none';
             
-            // Clear form inputs
-            document.querySelectorAll(`#scenario${scenarioNum} textarea`).forEach(ta => ta.value = '');
+            // Clear form inputs - remove selected states from choices and values
+            document.querySelectorAll(`#scenario${scenarioNum} .choice-option`).forEach(choice => choice.classList.remove('selected'));
             document.querySelectorAll(`#scenario${scenarioNum} .values-item`).forEach(item => item.classList.remove('selected'));
             
             // Reset scores
@@ -1761,13 +2594,6 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             updatePressure();
-            
-            // Add input event listeners to all textareas
-            document.addEventListener('input', function(e) {
-                if (e.target.classList.contains('decision-textarea')) {
-                    checkCompletion();
-                }
-            });
             
             // Initialize progress
             const progressIndicator = document.getElementById('progressIndicator');
